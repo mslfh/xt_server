@@ -1,0 +1,39 @@
+# Logs and databases #
+######################
+*.log
+*.sql
+*.sqlite
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+Zone.Identifier
+
+# VSCode #
+######################
+.vscode/*
+
+# Node.js #
+######################
+node_modules/
+
+# Build files #
+######################
+build/
+dist/
+*.zip
+
+# Local environment variables #
+######################
+.env
+
+# vs #
+######################
+.vs

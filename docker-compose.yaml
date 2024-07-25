@@ -1,0 +1,34 @@
+version: '3'
+services:
+  express:
+    image: exertime-image:latest
+    container_name: exertime-container
+    env_file: .env
+    ports:
+      - "5000:5000"
+    networks:
+      - my-network
+    depends_on:
+      - mysql
+    restart: always
+
+  mysql:
+    image: mysql:latest
+    container_name: mysql-container
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: adminjs
+    ports:
+      - "3306:3306"
+    command: mysqld --sql_mode="" --max_connections=1100 --general-log=1 --general-log-file=/tmp/mysql-general-log.log
+    healthcheck:
+      test: ["CMD", "sh", "-c", "cat /tmp/mysql-general-log.log | grep 'root@localhost on  using Socket'"]
+      interval: 10s
+      retries: 120
+    volumes:
+      - ./mysql-general-log.log:/tmp/mysql-general-log.log
+    networks:
+      - my-network
+      
+networks:
+  my-network:
