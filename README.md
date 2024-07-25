@@ -1,24 +1,5 @@
 ## Deployment
-
-### Method 1: Using Docker
-1. Navigate to the project folder:
-    ```sh
-    cd path/to/your/project
-    ```
-2. Build the Docker image:
-    ```sh
-    docker build -t exertime-image:latest .
-    ```
-3. Run the Docker container:
-    ```sh
-    docker compose up -d
-    ```
-4. Access the application at:
-    ```
-    http://localhost:5000/admin/login
-    ```
-
-### Method 2: Using local environment
+### Using local environment
 1. Navigate to the project folder:
     ```sh
     cd path/to/your/project
@@ -35,7 +16,25 @@
     ```sh
     npm run start
     ```
-5. Ensure MySQL is running and properly configured.
+5. Ensure MySQL is running and properly configured. The sql file is in ./src/db.
+
+## API Development
+
+https://docs.adminjs.co/installation/adapters
+
+We use Sequelize to build adapters.
+
+### Simple Demo
+1. Build /models/organisation.ts instance based on tables in Mysql
+
+2. Add organisation model into the resources in ./admin/option.ts file.
+
+3. Rebuild project.
+  Test in http://localhost:5000/admin/api/resources/organisation/actions/list
+
+4. This demo achieved basic CRUD actions by adminJs automatically. Please DO NOT edit the file that has been configured!!!
+
+5. You may need to build more complex action or model by yourself. (https://docs.adminjs.co/basics)
 
 ## Additional Notes
 You may use Docker to set up MySQL and use your local machine or WSL to run the application.
