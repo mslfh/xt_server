@@ -49,7 +49,7 @@ ExerciseLog.init({
 }, {
   sequelize,
   modelName: 'ExerciseLog',
-  tableName: 'exerciseLog',
+  tableName: 'ExerciseLog',
   timestamps: false,
 });
 
