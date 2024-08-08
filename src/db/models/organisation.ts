@@ -1,12 +1,19 @@
-// models/organisation.ts
-'use strict';
+import { DataTypes, Model, Optional } from 'sequelize';
+import sequelize from '../config.js';
 
-import { DataTypes, Model } from 'sequelize';
+interface OrganisationAttributes {
+    ID: number;
+    ShortName: string;
+    LongName: string;
+    CountdownDuration?: number;
+    WalkingExDelay?: number;
+}
 
-import sequelize from '../config.js'
+interface OrganisationCreationAttributes extends Optional<OrganisationAttributes, 'ID'> {}
 
-class Organisation extends Model {
-    public ID!: string;
+class Organisation extends Model<OrganisationAttributes, OrganisationCreationAttributes>
+    implements OrganisationAttributes {
+    public ID!: number;
     public ShortName!: string;
     public LongName!: string;
     public CountdownDuration?: number;
@@ -16,7 +23,8 @@ class Organisation extends Model {
 Organisation.init(
     {
         ID: {
-            type: DataTypes.CHAR(36),
+            type: DataTypes.INTEGER.UNSIGNED,
+            autoIncrement: true,
             primaryKey: true,
         },
         ShortName: {
@@ -37,7 +45,7 @@ Organisation.init(
         },
     },
     {
-        sequelize: sequelize,
+        sequelize,
         tableName: 'organisation',
         modelName: 'Organisation',
         timestamps: false,
