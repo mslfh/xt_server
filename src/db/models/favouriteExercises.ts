@@ -21,7 +21,7 @@ const FavouriteExercises = sequelize.define('FavouriteExercises', {
       },
     },
   }, {
-    tableName: 'favouriteExercises',
+    tableName: 'FavouriteExercises',
     timestamps: false,
   });
   

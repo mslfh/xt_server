@@ -17,7 +17,7 @@ ExerciseDepartment.init({
 }, {
   sequelize,
   modelName: 'ExerciseDepartment',
-  tableName: 'exerciseDepartments',
+  tableName: 'ExerciseDepartment',
   timestamps: false,
 });
 

@@ -27,19 +27,19 @@ Question.init({
   },
   Status: {
     type: DataTypes.ENUM('A', 'I', 'D'),
-    allowNull: true,
+    allowNull: false,
   },
   StartTime: {
     type: DataTypes.DATE,
-    allowNull: true,
+    allowNull: false,
   },
   EndTime: {
     type: DataTypes.DATE,
-    allowNull: true,
+    allowNull: false,
   },
   Type: {
     type: DataTypes.ENUM('MC', 'TEXT', 'RATING'),
-    allowNull: true,
+    allowNull: false,
   },
 }, {
   sequelize,

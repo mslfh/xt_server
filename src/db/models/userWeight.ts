@@ -24,7 +24,7 @@ UserWeight.init({
 }, {
   sequelize,
   modelName: 'UserWeight',
-  tableName: 'userWeights',
+  tableName: 'userWeight',
   timestamps: false,
 });
 

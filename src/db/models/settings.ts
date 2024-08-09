@@ -12,7 +12,7 @@ const Settings = sequelize.define('Settings', {
     allowNull: true,
   },
 }, {
-  tableName: 'Settings',
+  tableName: 'Settings', 
   timestamps: false,
 });
 

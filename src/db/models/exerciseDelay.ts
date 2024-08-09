@@ -25,7 +25,7 @@ const ExerciseDelay = sequelize.define('ExerciseDelay', {
     allowNull: true,
   },
 }, {
-  tableName: 'exerciseDelay',
+  tableName: 'ExerciseDelay',
   timestamps: false,
 });
 
