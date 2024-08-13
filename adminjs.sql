@@ -11,7 +11,7 @@
  Target Server Version : 80039
  File Encoding         : 65001
 
- Date: 13/08/2024 21:44:30
+ Date: 13/08/2024 22:47:04
 */
 
 SET NAMES utf8mb4;
@@ -34,7 +34,8 @@ CREATE TABLE `credential`  (
   `LastUsed` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`ID`) USING BTREE,
   UNIQUE INDEX `credentials__web_authn_user_i_d__user_id`(`WebAuthnUserID` ASC, `UserId` ASC) USING BTREE,
-  INDEX `idx_webauthn_user_id`(`WebAuthnUserID` ASC) USING BTREE
+  INDEX `idx_webauthn_user_id`(`WebAuthnUserID` ASC) USING BTREE,
+  UNIQUE INDEX `credential__web_authn_user_i_d__user_id`(`WebAuthnUserID` ASC, `UserId` ASC) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = 'For SimpleWebAuthn' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -101,10 +102,28 @@ CREATE TABLE `exercise`  (
 -- ----------------------------
 -- Records of exercise
 -- ----------------------------
-INSERT INTO `exercise` VALUES (1, 'Caption1', 'A', 'Type1', NULL, 'https://th.bing.com/th/id/OIP.8XLECwYGdt3DBa45yi83RAHaE8?rs=1&pid=ImgDetMain', 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4', '2024-08-07 05:19:28', 100, 'C', 1, 1);
-INSERT INTO `exercise` VALUES (2, 'Caption2', 'I', 'Type2', NULL, 'https://th.bing.com/th/id/OIP.8XLECwYGdt3DBa45yi83RAHaE8?rs=1&pid=ImgDetMain', 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', '2024-08-07 05:19:28', 200, 'M', 2, 2);
+INSERT INTO `exercise` VALUES (1, 'Caption1', 'A', 'Type1', 1, 'https://th.bing.com/th/id/OIP.8XLECwYGdt3DBa45yi83RAHaE8?rs=1&pid=ImgDetMain', 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4', '2024-08-07 05:19:28', 100, 'C', 1, 1);
+INSERT INTO `exercise` VALUES (2, 'Caption2', 'I', 'Type2', 2, 'https://th.bing.com/th/id/OIP.8XLECwYGdt3DBa45yi83RAHaE8?rs=1&pid=ImgDetMain', 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', '2024-08-07 05:19:28', 200, 'M', 2, 2);
 INSERT INTO `exercise` VALUES (3, 'Caption3', 'D', 'Type3', NULL, 'https://th.bing.com/th/id/OIP.8XLECwYGdt3DBa45yi83RAHaE8?rs=1&pid=ImgDetMain', 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4', '2024-08-07 05:19:28', 300, 'O', 3, 3);
 INSERT INTO `exercise` VALUES (4, 'Caption4', 'A', 'Type4', NULL, 'https://th.bing.com/th/id/OIP.8XLECwYGdt3DBa45yi83RAHaE8?rs=1&pid=ImgDetMain', 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4', '2024-08-07 05:19:28', 400, 'C', 4, 4);
+
+-- ----------------------------
+-- Table structure for exercise_category
+-- ----------------------------
+DROP TABLE IF EXISTS `exercise_category`;
+CREATE TABLE `exercise_category`  (
+  `ID` int NOT NULL,
+  `PID` int NULL DEFAULT NULL,
+  `Title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `Status` int NULL DEFAULT NULL,
+  PRIMARY KEY (`ID`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of exercise_category
+-- ----------------------------
+INSERT INTO `exercise_category` VALUES (1, 1, 'Sport', 1);
+INSERT INTO `exercise_category` VALUES (2, 1, 'Basketball', 1);
 
 -- ----------------------------
 -- Table structure for exercise_delay
@@ -155,7 +174,7 @@ CREATE TABLE `exercise_event`  (
   `Duration` int NULL DEFAULT NULL,
   `Weight` int NULL DEFAULT NULL,
   `IsRepeat` tinyint NULL DEFAULT NULL COMMENT '1-yes 0-no',
-  `RepeatNumber` int NULL DEFAULT NULL,
+  `RepeatCount` int NULL DEFAULT NULL,
   `Interval` int NULL DEFAULT NULL COMMENT 'minutes',
   PRIMARY KEY (`ID`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = 'For exercise plan' ROW_FORMAT = Dynamic;
@@ -216,6 +235,7 @@ CREATE TABLE `exercise_plan`  (
   `OrganisationID` int NULL DEFAULT NULL,
   `DepartmentID` int NULL DEFAULT NULL COMMENT 'optional',
   `Status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `Description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   `Type` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   `Frequency` varchar(48) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT 'Day, WorkingDay, Weekend, Custom',
   `CustomFrequency` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
@@ -230,7 +250,7 @@ CREATE TABLE `exercise_plan`  (
 -- ----------------------------
 -- Records of exercise_plan
 -- ----------------------------
-INSERT INTO `exercise_plan` VALUES (1, 'DefaultPlan', 1, NULL, 'active', 'default', 'Day', NULL, '2024-08-14 21:37:15', '2025-01-01 21:37:24', 1, 1, '2024-08-13 21:37:37');
+INSERT INTO `exercise_plan` VALUES (1, 'DefaultPlan', 1, NULL, 'active', NULL, 'default', 'Day', NULL, '2024-08-14 21:37:15', '2025-01-01 21:37:24', 1, 1, '2024-08-13 21:37:37');
 
 -- ----------------------------
 -- Table structure for helpful_hint
@@ -293,10 +313,10 @@ CREATE TABLE `question`  (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for surveyresponse
+-- Table structure for survey_response
 -- ----------------------------
-DROP TABLE IF EXISTS `surveyresponse`;
-CREATE TABLE `surveyresponse`  (
+DROP TABLE IF EXISTS `survey_response`;
+CREATE TABLE `survey_response`  (
   `ID` int UNSIGNED NOT NULL AUTO_INCREMENT,
   `UserID` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `Date` date NULL DEFAULT NULL,
@@ -312,7 +332,7 @@ CREATE TABLE `surveyresponse`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- Records of surveyresponse
+-- Records of survey_response
 -- ----------------------------
 
 -- ----------------------------
@@ -378,7 +398,7 @@ CREATE TABLE `user_event`  (
 DROP TABLE IF EXISTS `user_exercise_log`;
 CREATE TABLE `user_exercise_log`  (
   `ID` int NOT NULL,
-  `UserID` int NULL DEFAULT NULL,
+  `UserID` int NOT NULL,
   `EventID` int NULL DEFAULT NULL,
   `EventType` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT 'Organisation / Personal',
   `Status` int NULL DEFAULT NULL,
