@@ -140,7 +140,7 @@ User.init({
   },
 }, {
   sequelize,
-  tableName: 'User',
+  tableName: 'user',
 });
 
 export default User;

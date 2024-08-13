@@ -1,9 +1,9 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../config.js';
 
-class ExerciseLog extends Model {}
+class ExerciseEvent extends Model {}
 
-ExerciseLog.init({
+ExerciseEvent.init({
   ID: {
     type: DataTypes.INTEGER.UNSIGNED,
     autoIncrement: true,
@@ -14,43 +14,45 @@ ExerciseLog.init({
     type: DataTypes.INTEGER.UNSIGNED,
     allowNull: false,
   },
-  UserID: {
-    type: DataTypes.CHAR(36),
+  PlanID: {
+    type: DataTypes.INTEGER,
     allowNull: false,
   },
-  Repetitions: {
-    type: DataTypes.INTEGER,
+
+  StartTime: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
+  EndTime: {
+    type: DataTypes.DATE,
     allowNull: true,
   },
   Duration: {
     type: DataTypes.INTEGER,
     allowNull: true,
   },
-  Source: {
-    type: DataTypes.ENUM('M', 'A', 'O'),
+  Weight: {
+    type: DataTypes.INTEGER,
     allowNull: true,
   },
-  StartDateTime: {
-    type: DataTypes.DATE,
+  IsRepeat: {
+    type: DataTypes.TINYINT,
     allowNull: true,
   },
-  EndDateTime: {
-    type: DataTypes.DATE,
+  RepeatCount: {
+    type: DataTypes.INTEGER,
     allowNull: true,
   },
-  StandStartDateTime: {
-    type: DataTypes.DATE,
+  Interval: {
+    type: DataTypes.INTEGER,
     allowNull: true,
   },
-  StandEndDateTime: {
-    type: DataTypes.DATE,
-    allowNull: true,
-  },
+
 }, {
   sequelize,
-  modelName: 'ExerciseLog',
-  tableName: 'exercise_log',
+  modelName: 'ExerciseEvent',
+  tableName: 'exercise_event',
   timestamps: false,
 });
 
-export default ExerciseLog;
+export default ExerciseEvent;

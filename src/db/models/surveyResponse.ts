@@ -49,7 +49,7 @@ SurveyResponse.init({
 }, {
   sequelize,
   modelName: 'SurveyResponse',
-  tableName: 'SurveyResponses',
+  tableName: 'survey_response',
   timestamps: false,
 });
 

@@ -9,10 +9,18 @@ const ExerciseDelay = sequelize.define('ExerciseDelay', {
     allowNull: false,
   },
   UserID: {
-    type: DataTypes.CHAR(36),
+    type: DataTypes.INTEGER,
     allowNull: false,
     references: {
       model: 'User', 
+      key: 'ID',
+    },
+  },
+  ExerciseID: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'Exercise', 
       key: 'ID',
     },
   },
@@ -25,7 +33,7 @@ const ExerciseDelay = sequelize.define('ExerciseDelay', {
     allowNull: true,
   },
 }, {
-  tableName: 'exerciseDelay',
+  tableName: 'exercise_delay',
   timestamps: false,
 });
 

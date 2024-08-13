@@ -95,7 +95,7 @@ Department.init(
   },
   {
     sequelize,
-    tableName: 'departments',
+    tableName: 'department',
     modelName: 'Department',
     timestamps: false,
   }

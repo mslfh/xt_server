@@ -18,23 +18,21 @@ class Exercise extends Model {
 Exercise.init(
     {
         ID: {
-            type: DataTypes.CHAR(36),
+            type: DataTypes.INTEGER,
+            autoIncrement: true,
             primaryKey: true,
+            allowNull: false,
         },
         Type: {
             type: DataTypes.STRING(50),
             allowNull: false,
         },
-        Caption: {
-            type: DataTypes.STRING(50),
-            allowNull: false,
-        },
-        Image: {
-            type: DataTypes.BLOB,
+        CategoryID: {
+            type: DataTypes.INTEGER,
             allowNull: true,
         },
-        VideoURL: {
-            type: DataTypes.TEXT,
+        Caption: {
+            type: DataTypes.STRING(50),
             allowNull: true,
         },
         Duration: {
@@ -45,13 +43,21 @@ Exercise.init(
             type: DataTypes.ENUM('A', 'I', 'D'),
             allowNull: false,
         },
+        Image: {
+            type: DataTypes.TEXT,
+            allowNull: true,
+        },
+        VideoURL: {
+            type: DataTypes.TEXT,
+            allowNull: true,
+        },
         Kilojoules: {
             type: DataTypes.FLOAT,
-            allowNull: false,
+            allowNull: true,
         },
         CalculationType: {
             type: DataTypes.ENUM('C', 'M', 'O'),
-            allowNull: false,
+            allowNull: true,
         },
         ExerciseDelayID: {
             type: DataTypes.CHAR(36),
@@ -64,7 +70,7 @@ Exercise.init(
     },
     {
         sequelize,
-        tableName: 'exercises',
+        tableName: 'exercise',
         modelName: 'Exercise',
         timestamps: false,
     }

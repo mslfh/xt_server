@@ -28,7 +28,7 @@ UserPosition.init({
 }, {
   sequelize,
   modelName: 'UserPosition',
-  tableName: 'UserPositions',
+  tableName: 'user_position',
   timestamps: false,
 });
 

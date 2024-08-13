@@ -34,11 +34,11 @@ Credentials.init({
   },
   Transports: {
     type: DataTypes.STRING(255),
-  },
+  }
 }, {
   sequelize,
   modelName: 'Credentials',
-  tableName: 'credentials',
+  tableName: 'credential',
   timestamps: false,
   indexes: [
     {

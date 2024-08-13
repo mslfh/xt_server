@@ -29,7 +29,7 @@ UserEvents.init({
 }, {
   sequelize,
   modelName: 'UserEvents',
-  tableName: 'UserEvents',
+  tableName: 'user_event',
   timestamps: false,
 });
 

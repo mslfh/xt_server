@@ -1,7 +1,13 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../config.js';
 
-const FavouriteExercises = sequelize.define('FavouriteExercises', {
+const UserFavourite = sequelize.define('UserFavourite', {
+  ID: {
+    type: DataTypes.INTEGER.UNSIGNED,
+    autoIncrement: true,
+    primaryKey: true,
+    allowNull: false,
+  },
     UserID: {
       type: DataTypes.CHAR(36),
       allowNull: false,
@@ -16,13 +22,17 @@ const FavouriteExercises = sequelize.define('FavouriteExercises', {
       allowNull: false,
       primaryKey: true,
       references: {
-        model: 'exercises',
+        model: 'Exercise',
         key: 'ID',
       },
     },
+    CreatedAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
   }, {
-    tableName: 'favouriteExercises',
+    tableName: 'user_favorite',
     timestamps: false,
   });
   
-  export default FavouriteExercises;
+  export default UserFavourite;

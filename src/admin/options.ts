@@ -5,8 +5,6 @@ import Department from '../db/models/department.js';
 import Exercise from '../db/models/exercise.js';
 import User from '../db/models/user.js'; 
 import ExerciseDelay from '../db/models/exerciseDelay.js';
-import FavouriteExercises from '../db/models/favouriteExercises.js';
-import Settings from '../db/models/settings.js';
 import UserWeight from '../db/models/userWeight.js';
 import ExerciseDepartment from '../db/models/exerciseDepartment.js';
 import Credentials from '../db/models/credentials.js';
@@ -14,13 +12,15 @@ import ExerciseLog from '../db/models/exerciseLog.js';
 import Question from '../db/models/question.js';
 import HelpfulHints from '../db/models/helpfulHints.js';
 import ExerciseLogQuestion from '../db/models/exerciseLogQuestion.js';
-import Registrations from '../db/models/registrations.js';
 import UserPosition from '../db/models/userPosition.js';
 import SurveyResponse from '../db/models/surveyResponse.js';
 import UserEvents from '../db/models/userEvents.js';
-
-
-
+import ExerciseCategory from '../db/models/exerciseCategory.js';
+import ExerciseEvent from '../db/models/exerciseEvent.js';
+import ExercisePlan from '../db/models/exercisePlan.js';
+import UserExerciseLog from '../db/models/userExerciseLog.js';
+import UserFavourite from '../db/models/userFavorite.js';
+import UserSetting from '../db/models/userSettings.js';
 
 
 const options: AdminJSOptions = {
@@ -59,8 +59,6 @@ const options: AdminJSOptions = {
       options: {
         properties: {
           ID: { isVisible: { list: true, filter: true, show: true, edit: false } },
-          ExerciseDelayID: { reference: 'exercises', isVisible: true },
-          DepartmentID: { reference: 'departments', isVisible: true },
         },
         actions: {
           new: {
@@ -117,7 +115,7 @@ const options: AdminJSOptions = {
     },
 
     {
-      resource: FavouriteExercises,
+      resource: UserFavourite,
       options: {
         properties: {
           UserID: { reference: 'User', isVisible: true },
@@ -136,7 +134,7 @@ const options: AdminJSOptions = {
       },
     },
     {
-      resource: Settings,
+      resource: UserSetting,
       options: {
         properties: {
           SettingKey: { isVisible: { list: true, filter: true, show: true, edit: false } },
@@ -282,24 +280,6 @@ const options: AdminJSOptions = {
         },
       },
     },
-
-    {
-      resource: Registrations,
-      options: {
-        properties: {
-          RegistrationKey: { isVisible: { list: true, filter: true, show: true, edit: false } },
-          DepartmentID: { reference: 'departments', isVisible: true },
-        },
-        actions: {
-          new: {
-            before: async (request) => {
-              return request;
-            },
-          },
-        },
-      },
-    },
-
     {
       resource: UserPosition,
       options: {
@@ -316,7 +296,6 @@ const options: AdminJSOptions = {
         },
       },
     },
-
     {
       resource: SurveyResponse,
       options: {
@@ -340,6 +319,66 @@ const options: AdminJSOptions = {
         properties: {
           ID: { isVisible: { list: true, filter: true, show: true, edit: false } },
           UserID: { reference: 'User', isVisible: true },
+        },
+        actions: {
+          new: {
+            before: async (request) => {
+              return request;
+            },
+          },
+        },
+      },
+    },
+    {
+      resource: UserExerciseLog,
+      options: {
+        properties: {
+          ID: { isVisible: { list: true, filter: true, show: true, edit: false } },
+        },
+        actions: {
+          new: {
+            before: async (request) => {
+              return request;
+            },
+          },
+        },
+      },
+    },
+    {
+      resource: ExerciseCategory,
+      options: {
+        properties: {
+          ID: { isVisible: { list: true, filter: true, show: true, edit: false } },
+        },
+        actions: {
+          new: {
+            before: async (request) => {
+              return request;
+            },
+          },
+        },
+      },
+    },
+    {
+      resource: ExerciseEvent,
+      options: {
+        properties: {
+          ID: { isVisible: { list: true, filter: true, show: true, edit: false } },
+        },
+        actions: {
+          new: {
+            before: async (request) => {
+              return request;
+            },
+          },
+        },
+      },
+    },
+    {
+      resource: ExercisePlan,
+      options: {
+        properties: {
+          ID: { isVisible: { list: true, filter: true, show: true, edit: false } },
         },
         actions: {
           new: {

@@ -1,15 +1,15 @@
-version: '3'
+version: '3.8'
 services:
-  express:
-    image: exertime-image:latest
-    container_name: exertime-container
+  adminjs:
+    build: .
+    container_name: adminjs-container
     env_file: .env
     ports:
-      - "5000:5000"
-    networks:
-      - my-network
+      - "3000:3000"
     depends_on:
       - mysql
+    networks:
+      - my-network
     restart: always
 
   mysql:
@@ -26,9 +26,14 @@ services:
       interval: 10s
       retries: 120
     volumes:
+      - db_data:/var/lib/mysql
+      - ./adminjs_backup.sql:/docker-entrypoint-initdb.d/adminjs_backup.sql
       - ./mysql-general-log.log:/tmp/mysql-general-log.log
     networks:
       - my-network
-      
+
+volumes:
+  db_data:
+
 networks:
   my-network:

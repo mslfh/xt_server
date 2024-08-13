@@ -44,7 +44,7 @@ Question.init({
 }, {
   sequelize,
   modelName: 'Question',
-  tableName: 'Question',
+  tableName: 'question',
   timestamps: false,
 });
 

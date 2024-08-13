@@ -26,7 +26,7 @@ const HelpfulHints = sequelize.define('HelpfulHints', {
       onUpdate: 'CASCADE',
     },
   }, {
-    tableName: 'HelpfulHints',
+    tableName: 'helpful_hint',
     timestamps: false,
   });
   
