@@ -5,6 +5,7 @@ import provider from './admin/auth-provider.js';
 import options from './admin/options.js';
 import initializeDb from './db/index.js';
 import * as dotenv from 'dotenv';
+import session from 'express-session';
 
 dotenv.config();
 const port = process.env.PORT || 5000;
@@ -21,6 +22,14 @@ const start = async () => {
   } else {
     admin.watch();
   }
+
+  // Session configuration
+  app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: process.env.NODE_ENV === 'production' }
+  }));
 
   const router = buildAuthenticatedRouter(
     admin,
