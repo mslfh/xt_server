@@ -31,6 +31,7 @@ Credentials.init({
   BackedUp: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
+    defaultValue: false, 
   },
   Transports: {
     type: DataTypes.STRING(255),
@@ -38,7 +39,11 @@ Credentials.init({
 }, {
   sequelize,
   modelName: 'Credentials',
+<<<<<<< HEAD
   tableName: 'credential',
+=======
+  tableName: 'Credentials',
+>>>>>>> 1fbc1d23c968f30629b3c5e5b1151ba8c75f6c3b
   timestamps: false,
   indexes: [
     {

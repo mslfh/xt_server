@@ -46,7 +46,7 @@ Organisation.init(
     },
     {
         sequelize,
-        tableName: 'organisation',
+        tableName: 'Organisation',
         modelName: 'Organisation',
         timestamps: false,
     }

@@ -35,6 +35,8 @@ Department.init(
         model: Organisation,
         key: 'ID',
       },
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
     },
     ShortName: {
       type: DataTypes.STRING(50),
@@ -95,10 +97,22 @@ Department.init(
   },
   {
     sequelize,
+<<<<<<< HEAD
     tableName: 'department',
+=======
+    tableName: 'Department',
+>>>>>>> 1fbc1d23c968f30629b3c5e5b1151ba8c75f6c3b
     modelName: 'Department',
     timestamps: false,
   }
 );
+
+Department.belongsTo(Organisation, {
+  foreignKey: 'OrganisationID',
+  targetKey: 'ID',
+  as: 'organisation',
+  onDelete: 'CASCADE',
+  onUpdate: 'CASCADE',
+});
 
 export default Department;
