@@ -97,11 +97,7 @@ Department.init(
   },
   {
     sequelize,
-<<<<<<< HEAD
     tableName: 'department',
-=======
-    tableName: 'Department',
->>>>>>> 1fbc1d23c968f30629b3c5e5b1151ba8c75f6c3b
     modelName: 'Department',
     timestamps: false,
   }

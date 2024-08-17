@@ -31,11 +31,7 @@ const UserFavourite = sequelize.define('UserFavourite', {
       allowNull: true,
     },
   }, {
-<<<<<<< HEAD:src/db/models/userFavorite.ts
     tableName: 'user_favorite',
-=======
-    tableName: 'FavouriteExercises',
->>>>>>> 1fbc1d23c968f30629b3c5e5b1151ba8c75f6c3b:src/db/models/favouriteExercises.ts
     timestamps: false,
   });
   

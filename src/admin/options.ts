@@ -59,11 +59,6 @@ const options: AdminJSOptions = {
       options: {
         properties: {
           ID: { isVisible: { list: true, filter: true, show: true, edit: false } },
-<<<<<<< HEAD
-=======
-          ExerciseDelayID: { reference: 'ExerciseDelay', isVisible: true },
-          DepartmentID: { reference: 'Department', isVisible: true },
->>>>>>> 1fbc1d23c968f30629b3c5e5b1151ba8c75f6c3b
         },
         actions: {
           new: {
@@ -82,11 +77,7 @@ const options: AdminJSOptions = {
       options: {
         properties: {
           ID: { isVisible: { list: true, filter: true, show: true, edit: false } },
-<<<<<<< HEAD
           DepartmentID: { reference: 'department', isVisible: true },
-=======
-          DepartmentID: { reference: 'Department', isVisible: true },
->>>>>>> 1fbc1d23c968f30629b3c5e5b1151ba8c75f6c3b
           CreatedAt: { isVisible: { list: true, filter: true, show: true, edit: false } },
           UpdatedAt: { isVisible: { list: true, filter: true, show: true, edit: false } },
   
@@ -300,27 +291,6 @@ const options: AdminJSOptions = {
         },
       },
     },
-<<<<<<< HEAD
-=======
-
-    {
-      resource: Registrations,
-      options: {
-        properties: {
-          RegistrationKey: { isVisible: { list: true, filter: true, show: true, edit: false } },
-          DepartmentID: { reference: 'Department', isVisible: true },
-        },
-        actions: {
-          new: {
-            before: async (request) => {
-              return request;
-            },
-          },
-        },
-      },
-    },
-
->>>>>>> 1fbc1d23c968f30629b3c5e5b1151ba8c75f6c3b
     {
       resource: UserPosition,
       options: {

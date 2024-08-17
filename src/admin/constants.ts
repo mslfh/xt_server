@@ -1,4 +1,4 @@
 export const DEFAULT_ADMIN = {
-  email: '',
-  password: '',
+  email: 'admin@example.com',
+  password: 'password',
 };
