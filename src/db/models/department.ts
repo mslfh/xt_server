@@ -35,6 +35,8 @@ Department.init(
         model: Organisation,
         key: 'ID',
       },
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
     },
     ShortName: {
       type: DataTypes.STRING(50),
@@ -100,5 +102,13 @@ Department.init(
     timestamps: false,
   }
 );
+
+Department.belongsTo(Organisation, {
+  foreignKey: 'OrganisationID',
+  targetKey: 'ID',
+  as: 'organisation',
+  onDelete: 'CASCADE',
+  onUpdate: 'CASCADE',
+});
 
 export default Department;

@@ -31,6 +31,7 @@ Credentials.init({
   BackedUp: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
+    defaultValue: false, 
   },
   Transports: {
     type: DataTypes.STRING(255),

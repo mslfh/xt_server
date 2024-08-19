@@ -31,7 +31,7 @@ const options: AdminJSOptions = {
       resource: Organisation,
       options: {
         properties: {
-          ID: { isVisible: { list: true, filter: true, show: true, edit: false } },
+          ID: { isVisible: { list: true, filter: true, show: true, edit: true } },
         },
       },
     },
@@ -40,7 +40,7 @@ const options: AdminJSOptions = {
       options: {
         properties: {
           ID: { isVisible: { list: true, filter: true, show: true, edit: false } },
-          OrganisationID: { reference: 'organisation', isVisible: true },
+          OrganisationID: { reference: 'Organisation', isVisible: true },
         },
         actions: {
           new: {
@@ -119,7 +119,7 @@ const options: AdminJSOptions = {
       options: {
         properties: {
           UserID: { reference: 'User', isVisible: true },
-          ExerciseID: { reference: 'exercises', isVisible: true },
+          ExerciseID: { reference: 'Exercise', isVisible: true },
         },
         actions: {
           new: {
@@ -137,7 +137,7 @@ const options: AdminJSOptions = {
       resource: UserSetting,
       options: {
         properties: {
-          SettingKey: { isVisible: { list: true, filter: true, show: true, edit: false } },
+          SettingKey: { isVisible: { list: true, filter: true, show: true, edit: true } },
           SettingValue: { isVisible: true },
         },
         actions: {
@@ -172,8 +172,8 @@ const options: AdminJSOptions = {
       resource: ExerciseDepartment,
       options: {
         properties: {
-          ExerciseID: { reference: 'exercises', isVisible: true },
-          DepartmentID: { reference: 'departments', isVisible: true },
+          ExerciseID: { reference: 'Exercise', isVisible: true },
+          DepartmentID: { reference: 'Department', isVisible: true },
         },
         actions: {
           new: {
@@ -210,13 +210,14 @@ const options: AdminJSOptions = {
         },
       },
     },
+    
 
     {
       resource: ExerciseLog,
       options: {
         properties: {
           ID: { isVisible: { list: true, filter: true, show: true, edit: false } },
-          ExerciseID: { reference: 'exercises', isVisible: true },
+          ExerciseID: { reference: 'Exercise', isVisible: true },
           UserID: { reference: 'User', isVisible: true },
         },
         actions: {
@@ -236,10 +237,20 @@ const options: AdminJSOptions = {
       options: {
         properties: {
           ID: { isVisible: { list: true, filter: true, show: true, edit: false } },
+          Type: { isVisible: true },
+          EndTime: { isVisible: true },
+          StartTime: { isVisible: true },
+          Status: { isVisible: true },
+          MaxCaption: { isVisible: true },
+          MinCaption: { isVisible: true },
+          Order: { isVisible: true },
         },
         actions: {
           new: {
             before: async (request) => {
+              if (request.payload) {
+                delete request.payload.ID;
+              }
               return request;
             },
           },
@@ -252,7 +263,7 @@ const options: AdminJSOptions = {
       options: {
         properties: {
           ID: { isVisible: { list: true, filter: true, show: true, edit: false } },
-          DepartmentID: { reference: 'departments', isVisible: true },
+          DepartmentID: { reference: 'Department', isVisible: true },
         },
         actions: {
           new: {

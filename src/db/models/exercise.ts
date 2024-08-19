@@ -1,19 +1,7 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../config.js';
 
-class Exercise extends Model {
-    public ID!: string;
-    public Type!: string;
-    public Caption!: string;
-    public Image!: Buffer;
-    public VideoURL!: string;
-    public Duration!: Date;
-    public Status!: 'A' | 'I' | 'D';
-    public Kilojoules!: number;
-    public CalculationType!: 'C' | 'M' | 'O';
-    public ExerciseDelayID!: string;
-    public DepartmentID!: string; 
-}
+class Exercise extends Model {}
 
 Exercise.init(
     {
