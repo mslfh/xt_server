@@ -37,4 +37,4 @@ We use Sequelize to build adapters.
 5. You may need to build more complex action or model by yourself. (https://docs.adminjs.co/basics)
 
 ## Additional Notes
-You may use Docker to set up MySQL and use your local machine or WSL to run the application.
+You may set up MySQL on your local machine to run the application.
