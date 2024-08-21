@@ -141,6 +141,9 @@ User.init({
 }, {
   sequelize,
   tableName: 'user',
+  timestamps: false, 
 });
+
+
 
 export default User;

@@ -9,16 +9,15 @@ const UserSetting = sequelize.define('UserSetting', {
     allowNull: false,
   },
   UserID: {
-    type: DataTypes.CHAR(36),
+    type: DataTypes.INTEGER, 
     allowNull: false,
   },
   Content: {
-    type: DataTypes.TEXT,
-    primaryKey: true,
+    type: DataTypes.STRING(255),  
     allowNull: false,
   },
   Value: {
-    type: DataTypes.TEXT,
+    type: DataTypes.STRING(255), 
     allowNull: true,
   },
 }, {

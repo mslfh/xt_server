@@ -5,9 +5,10 @@ class UserPosition extends Model {}
 
 UserPosition.init({
   ID: {
-    type: DataTypes.CHAR(36),
+    type: DataTypes.INTEGER.UNSIGNED,
     primaryKey: true,
     allowNull: false,
+    autoIncrement: true,
   },
   UserID: {
     type: DataTypes.CHAR(36),

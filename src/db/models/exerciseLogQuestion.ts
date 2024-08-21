@@ -8,19 +8,11 @@ ExerciseLogQuestion.init({
     type: DataTypes.INTEGER.UNSIGNED,
     allowNull: false,
     primaryKey: true,
-    references: {
-      model: 'exerciseLog',
-      key: 'ID',
-    },
   },
   QuestionID: {
     type: DataTypes.CHAR(36),
     allowNull: false,
     primaryKey: true,
-    references: {
-      model: 'questions',
-      key: 'ID',
-    },
   },
   Response: {
     type: DataTypes.INTEGER,

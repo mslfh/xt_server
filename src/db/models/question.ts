@@ -5,8 +5,9 @@ class Question extends Model {}
 
 Question.init({
   ID: {
-    type: DataTypes.CHAR(36),
+    type: DataTypes.INTEGER.UNSIGNED,  
     primaryKey: true,
+    autoIncrement: true, 
     allowNull: false,
   },
   Caption: {
@@ -26,7 +27,7 @@ Question.init({
     allowNull: true,
   },
   Status: {
-    type: DataTypes.ENUM('A', 'I', 'D'),
+    type: DataTypes.ENUM('A', 'I', 'D'),  // 'A' for active, 'I' for inactive, 'D' for deleted
     allowNull: false,
   },
   StartTime: {
@@ -38,14 +39,14 @@ Question.init({
     allowNull: false,
   },
   Type: {
-    type: DataTypes.ENUM('MC', 'TEXT', 'RATING'),
+    type: DataTypes.ENUM('MC', 'TEXT', 'RATING'),  // Multiple choice, text, or rating question
     allowNull: false,
   },
 }, {
   sequelize,
   modelName: 'Question',
   tableName: 'question',
-  timestamps: false,
+  timestamps: false,  
 });
 
 export default Question;
