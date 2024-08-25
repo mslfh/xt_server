@@ -9,12 +9,14 @@ const ExerciseDelay = sequelize.define('ExerciseDelay', {
     allowNull: false,
   },
   UserID: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.CHAR(36),
     allowNull: false,
     references: {
-      model: 'User', 
+      model: 'User',
       key: 'ID',
     },
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
   },
   ExerciseID: {
     type: DataTypes.INTEGER,
@@ -36,5 +38,7 @@ const ExerciseDelay = sequelize.define('ExerciseDelay', {
   tableName: 'exercise_delay',
   timestamps: false,
 });
+
+
 
 export default ExerciseDelay;

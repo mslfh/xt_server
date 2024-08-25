@@ -17,6 +17,8 @@ SurveyResponse.init({
       model: 'User',
       key: 'ID',
     },
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
   },
   Date: {
     type: DataTypes.DATE,

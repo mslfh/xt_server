@@ -9,8 +9,14 @@ const UserSetting = sequelize.define('UserSetting', {
     allowNull: false,
   },
   UserID: {
-    type: DataTypes.INTEGER, 
+    type: DataTypes.CHAR(36),
     allowNull: false,
+    references: {
+      model: 'User',
+      key: 'ID',
+    },
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
   },
   Content: {
     type: DataTypes.STRING(255),  

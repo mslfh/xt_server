@@ -1,67 +1,81 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../config.js';
+import Department from './department.js';
+import ExerciseDelay from './exerciseDelay.js';
 
 class Exercise extends Model {}
 
 Exercise.init(
-    {
-        ID: {
-            type: DataTypes.INTEGER,
-            autoIncrement: true,
-            primaryKey: true,
-            allowNull: false,
-        },
-        Type: {
-            type: DataTypes.STRING(50),
-            allowNull: false,
-        },
-        CategoryID: {
-            type: DataTypes.INTEGER,
-            allowNull: true,
-        },
-        Caption: {
-            type: DataTypes.STRING(50),
-            allowNull: true,
-        },
-        Duration: {
-            type: DataTypes.DATE,
-            allowNull: false,
-        },
-        Status: {
-            type: DataTypes.ENUM('A', 'I', 'D'),
-            allowNull: false,
-        },
-        Image: {
-            type: DataTypes.TEXT,
-            allowNull: true,
-        },
-        VideoURL: {
-            type: DataTypes.TEXT,
-            allowNull: true,
-        },
-        Kilojoules: {
-            type: DataTypes.FLOAT,
-            allowNull: true,
-        },
-        CalculationType: {
-            type: DataTypes.ENUM('C', 'M', 'O'),
-            allowNull: true,
-        },
-        ExerciseDelayID: {
-            type: DataTypes.CHAR(36),
-            allowNull: false,
-        },
-        DepartmentID: {
-            type: DataTypes.CHAR(36),
-            allowNull: false,
-        },
+  {
+    ID: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      autoIncrement: true,
+      primaryKey: true,
+      allowNull: false,
     },
-    {
-        sequelize,
-        tableName: 'exercise',
-        modelName: 'Exercise',
-        timestamps: false,
-    }
+    Caption: {
+      type: DataTypes.STRING(50),
+      allowNull: false,
+    },
+    Status: {
+      type: DataTypes.ENUM('A', 'I', 'D'),
+      allowNull: false,
+    },
+    Type: {
+      type: DataTypes.STRING(50),
+      allowNull: true,
+    },
+    CategoryID: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: true,
+    },
+    Image: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    VideoURL: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    Duration: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+    Kilojoules: {
+      type: DataTypes.FLOAT,
+      allowNull: true,
+    },
+    CalculationType: {
+      type: DataTypes.ENUM('C', 'M', 'O'),
+      allowNull: true,
+    },
+    ExerciseDelayID: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: true,
+      references: {
+        model: ExerciseDelay,
+        key: 'ID',
+      },
+    },
+    DepartmentID: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: true,
+      references: {
+        model: Department,
+        key: 'ID',
+      },
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
+    },
+  },
+  {
+    sequelize,
+    tableName: 'exercise',
+    modelName: 'Exercise',
+    timestamps: false,
+  }
 );
+
+
 
 export default Exercise;

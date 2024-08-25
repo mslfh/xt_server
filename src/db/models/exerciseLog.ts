@@ -1,5 +1,7 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../config.js';
+import User from './user.js';
+import Exercise from './exercise.js';
 
 class ExerciseLog extends Model {}
 
@@ -17,6 +19,12 @@ ExerciseLog.init({
   UserID: {
     type: DataTypes.CHAR(36),
     allowNull: false,
+    references: {
+      model: 'User',
+      key: 'ID',
+    },
+    onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
   },
   Repetitions: {
     type: DataTypes.INTEGER,
@@ -52,5 +60,19 @@ ExerciseLog.init({
   tableName: 'exercise_log',
   timestamps: false,
 });
+
+ExerciseLog.belongsTo(User, {
+  foreignKey: 'UserID',
+  onDelete: 'CASCADE',
+  onUpdate: 'CASCADE',
+});
+
+ExerciseLog.belongsTo(Exercise, {
+  foreignKey: 'ExerciseID',
+  onDelete: 'CASCADE',
+  onUpdate: 'CASCADE',
+});
+
+
 
 export default ExerciseLog;

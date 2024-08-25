@@ -1,5 +1,6 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../config.js';
+import Exercise from './exercise.js';
 
 class ExerciseEvent extends Model {}
 
@@ -53,5 +54,10 @@ ExerciseEvent.init({
   timestamps: false,
 });
 
+ExerciseEvent.belongsTo(Exercise, {
+  foreignKey: 'ExerciseID',
+  onDelete: 'CASCADE',
+  onUpdate: 'CASCADE',
+});
 
 export default ExerciseEvent;

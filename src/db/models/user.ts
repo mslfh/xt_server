@@ -1,5 +1,6 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../config.js';
+import Department from './department.js';
 
 interface UserAttributes {
   ID: string;
@@ -144,6 +145,10 @@ User.init({
   timestamps: false, 
 });
 
-
+User.belongsTo(Department, {
+  foreignKey: 'DepartmentID',
+  onDelete: 'CASCADE',
+  onUpdate: 'CASCADE',
+});
 
 export default User;
