@@ -190,7 +190,7 @@ const options: AdminJSOptions = {
       options: {
         properties: {
           ID: { isVisible: { list: true, filter: true, show: true, edit: false } },
-          UserId: { reference: 'User', isVisible: true },
+          UserId: { reference: 'user', isVisible: true },
           WebAuthnUserID: { isVisible: true },
           PublicKey: { isVisible: true },
           Counter: { isVisible: true },

@@ -15,7 +15,7 @@ Credentials.init({
   },
   PublicKey: {
     type: DataTypes.BLOB,
-    allowNull: false,
+    allowNull: true,
   },
   WebAuthnUserID: {
     type: DataTypes.CHAR(36),
