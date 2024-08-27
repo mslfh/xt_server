@@ -1,5 +1,6 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../config.js';
+import Department from './department.js';
 
 class User extends Model {}
 
@@ -83,6 +84,13 @@ User.init({
 }, {
   sequelize,
   tableName: 'user',
+  timestamps: false, 
+});
+
+User.belongsTo(Department, {
+  foreignKey: 'DepartmentID',
+  onDelete: 'CASCADE',
+  onUpdate: 'CASCADE',
 });
 
 export default User;

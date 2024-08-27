@@ -16,6 +16,8 @@ const UserFavourite = sequelize.define('UserFavourite', {
         model: 'User',
         key: 'ID',
       },
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
     },
     ExerciseID: {
       type: DataTypes.INTEGER.UNSIGNED,
@@ -25,6 +27,8 @@ const UserFavourite = sequelize.define('UserFavourite', {
         model: 'Exercise',
         key: 'ID',
       },
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
     },
     CreatedAt: {
       type: DataTypes.DATE,

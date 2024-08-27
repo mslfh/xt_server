@@ -9,9 +9,15 @@ Credentials.init({
     primaryKey: true,
     allowNull: false,
   },
-  UserId: {
+  UserID: {
     type: DataTypes.CHAR(36),
     allowNull: false,
+    references: {
+      model: 'User',
+      key: 'ID',
+    },
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
   },
   PublicKey: {
     type: DataTypes.BLOB,

@@ -12,6 +12,12 @@ UserWeight.init({
   UserID: {
     type: DataTypes.CHAR(36),
     allowNull: false,
+    references: {
+      model: 'User',
+      key: 'ID',
+    },
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
   },
   Date: {
     type: DataTypes.DATE,

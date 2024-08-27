@@ -1,5 +1,6 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../config.js';
+import Department from './department.js';
 
 class ExerciseDepartment extends Model {}
 
@@ -19,6 +20,12 @@ ExerciseDepartment.init({
   modelName: 'ExerciseDepartment',
   tableName: 'exercise_department',
   timestamps: false,
+});
+
+ExerciseDepartment.belongsTo(Department, {
+  foreignKey: 'DepartmentID',
+  onDelete: 'CASCADE',
+  onUpdate: 'CASCADE',
 });
 
 export default ExerciseDepartment;

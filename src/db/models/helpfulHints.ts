@@ -30,4 +30,6 @@ const HelpfulHints = sequelize.define('HelpfulHints', {
     timestamps: false,
   });
   
+
+
   export default HelpfulHints;
