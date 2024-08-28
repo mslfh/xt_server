@@ -1,7 +1,16 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../config.js';
 
-class Credentials extends Model {}
+class Credentials extends Model {
+  public ID!: string;
+  public UserId!: string;
+  public PublicKey!: Buffer;
+  public WebAuthnUserID!: string;
+  public Counter!: number;
+  public DeviceType!: string;
+  public BackedUp!: boolean;
+  public Transports?: string;
+}
 
 Credentials.init({
   ID: {
@@ -13,7 +22,7 @@ Credentials.init({
     type: DataTypes.CHAR(36),
     allowNull: false,
     references: {
-      model: 'User',
+      model: 'user',
       key: 'ID',
     },
     onDelete: 'CASCADE',
@@ -37,7 +46,7 @@ Credentials.init({
   BackedUp: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
-    defaultValue: false, 
+    defaultValue: false,
   },
   Transports: {
     type: DataTypes.STRING(255),
