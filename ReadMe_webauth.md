@@ -418,7 +418,7 @@ curl.exe -X POST "http://localhost:5000/admin/api/webauthn/login/verify" `
 
 ### Test Case 16: Complete successful execution
 
-Its tough to test this functionality without frontend implementation due to similar reasons that are mentioned in test case 8.
+Its tough to test this functionality without frontend implementation due to similar reasons that are mentioned in test case 6.
 
 - **Outcome**: PENDING
 
@@ -499,7 +499,7 @@ Its tough to test this functionality without frontend implementation due to simi
 
 ### Test Case 20: Invalid Authentication Response
 
-Its tough to test this functionality without frontend implementation due to similar reasons that are mentioned in test case 8.
+Its tough to test this functionality without frontend implementation due to similar reasons that are mentioned in test case 6.
 
 - **Description**: The `authenticationResponse` is invalid (e.g., the signature does not match the stored public key).
 - **Input**: Request body in data.json.
