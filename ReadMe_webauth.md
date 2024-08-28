@@ -204,7 +204,7 @@ curl.exe -X POST "http://localhost:5000/admin/api/webauthn/register/verify" `
   -b "<cookie_name>=<valid_cookie_value>" `
   -w "%{http_code}\n"
 ```
-### Test 6: Successful execution
+### Test 6: Complete successful execution
 
 The **Verifying Registration API** is part of the WebAuthn flow, where it checks the validity of a user's registration response from a hardware authenticator (like a fingerprint scanner or security key). The process involves verifying that the client's response matches the challenge initially provided by the server and that the response is signed correctly by the user's authenticator.
 
