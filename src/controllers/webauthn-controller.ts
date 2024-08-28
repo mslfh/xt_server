@@ -17,6 +17,11 @@ const rpID = process.env.RP_ID!;
 const origin = process.env.ORIGIN!;
 const timeout = parseInt(process.env.TIMEOUT_MS!, 10);
 
+// Define the base64ToBase64URL function to convert Base64 to Base64URL format
+function base64ToBase64URL(base64: string): string {
+    return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+
 // Registration Options API
 export const registrationOptions = async (req: Request, res: Response) => {
     console.log('Registration Options Route Hit');
@@ -79,6 +84,10 @@ export const verifyRegistration = async (req: Request, res: Response) => {
         if (!storedChallenge) {
             return res.status(400).json({ error: 'Challenge not found in session' });
         }
+
+        // Convert id and rawId to Base64URL format
+        attestationResponse.id = base64ToBase64URL(attestationResponse.id);
+        attestationResponse.rawId = base64ToBase64URL(attestationResponse.rawId);
 
         const verification = await verifyRegistrationResponse({
             response: attestationResponse,
