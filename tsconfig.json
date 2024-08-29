@@ -12,7 +12,16 @@
     "allowJs": true,
     "sourceMap": false,
     "outDir": "./dist",
+    "typeRoots": [
+      "./types",
+      "./node_modules/@types"
+    ],
     "baseUrl": "./",
+    "paths": {
+      "@simplewebauthn/*": [
+        "node_modules/@simplewebauthn/*"
+      ]
+    },
     "incremental": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,

@@ -10,9 +10,13 @@
   "dependencies": {
     "@adminjs/express": "^6.1.0",
     "@adminjs/sequelize": "^4.1.1",
+    "@simplewebauthn/browser": "^10.0.0",
+    "@simplewebauthn/server": "^10.0.1",
+    "@simplewebauthn/types": "^10.0.0",
     "adminjs": "^7.8.11",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
+    "connect-session-sequelize": "^7.1.7",
     "csv-parser": "^3.0.0",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
@@ -28,6 +32,7 @@
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
     "@types/express": "^4.17.17",
+    "@types/express-session": "^1.18.0",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^18.19.45",
     "@typescript-eslint/eslint-plugin": "^5.58.0",
