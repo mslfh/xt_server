@@ -274,6 +274,7 @@ Without the front-end to handle these steps, generating valid test data and main
 ### Test 10: Challenge Not Found in Session
 - **Description**: The challenge required for verification is not found in the session, likely due to session expiry or incorrect session management.
 - **Input**: Request body in data.json.
+```json
 {
     "username": "alicejohnson",
     "attestationResponse": {
@@ -286,7 +287,7 @@ Without the front-end to handle these steps, generating valid test data and main
         }
     }
 }
-
+```
 - **Setup**:
   - Use an expired or invalid session cookie.
   ```sh
@@ -321,22 +322,27 @@ curl.exe -X POST "http://localhost:5000/admin/api/webauthn/login/options" `
 ### Test Case 11: Successful Authentication Options Retrieval
    - **Description**: Verify that the API returns authentication options for a valid user.
    - **Input**:
-     - Request body in data.json: `{ "username": "alicejohnson" }`
+     - Request body in data.json:
+     ```json 
+      { 
+          "username": "alicejohnson" 
+      }
+     ```
    - **Expected Output**:
      - Status Code: 200
      - Response Body:
        ```json
        {
-         "challenge": "<base64url-encoded challenge>",
-         "timeout": 60000,
-         "rpID": "localhost",
-         "allowCredentials": [
-           {
-             "id": "1",
-             "type": "public-key"
-           }
-         ],
-         "userVerification": "preferred"
+          "rpID": "localhost",
+          "challenge": "<base64url-encoded challenge>",
+          "allowCredentials": [
+             {
+               "id": "1",
+              "type": "public-key"
+            }
+          ],
+          "timeout": 60000,
+          "userVerification": "preferred"
        }
        ```
 - **Outcome**: PASSED
@@ -375,17 +381,22 @@ curl.exe -X POST "http://localhost:5000/admin/api/webauthn/login/options" `
 ### Test Case 14: No Credentials Found for User
    - **Description**: Verify that the API returns an empty `allowCredentials` array when the user exists but has no credentials stored.
    - **Input**:
-     - Request body in data.json: { "username": "johndoe" }
+     - Request body in data.json: 
+     ```json
+      { 
+          "username": "johndoe" 
+      }
+      ```
    - **Expected Output**:
      - Status Code: 200
      - Response Body:
        ```json
        {
-         "challenge": "<base64url-encoded challenge>",
-         "timeout": 60000,
-         "rpID": "localhost",
-         "allowCredentials": [],
-         "userVerification": "preferred"
+          "rpID": "localhost",
+          "challenge": "<base64url-encoded challenge>",
+          "allowCredentials": [],
+          "timeout": 60000,
+          "userVerification": "preferred"
        }
        ```
 - **Outcome**: PASSED
@@ -393,7 +404,12 @@ curl.exe -X POST "http://localhost:5000/admin/api/webauthn/login/options" `
 ### Test Case 15: Invalid Content Type
    - **Description**: Verify that the API returns an error when the `Content-Type` header is not set to `application/json`.
    - **Input**:
-     - Request body in data.json: { "username": "alicejohnson" }
+     - Request body in data.json: 
+     ```json
+      { 
+          "username": "alicejohnson" 
+      }
+      ```
      - Header: `Content-Type: text/plain`
    - **Expected Output**:
      - Status Code: 415
@@ -426,7 +442,15 @@ Its tough to test this functionality without frontend implementation due to simi
 
 - **Description**: The request is missing the required `username` or `authenticationResponse` fields.
 - **Input**:
-  - - Request body in data.json: {"authenticationResponse": {"id": "dummy", "type": "public-key"}}
+  - Request body in data.json: 
+  ```json
+  {
+      "authenticationResponse": {
+          "id": "dummy",
+          "type": "public-key"
+      }
+  }
+  ```
 - **Expected Output**:
   - **Status Code**: 400
   - **Response Body**:
@@ -442,21 +466,21 @@ Its tough to test this functionality without frontend implementation due to simi
 - **Description**: The username provided does not exist in the database.
 - **Input**: Request body in data.json.
 ```json
-	{
-      "username": "nonexistentuser",
-      "authenticationResponse": {
+{
+    "username": "nonexistentuser",
+    "authenticationResponse": {
         "id": "dummy",
         "rawId": "dummyRawId",
         "type": "public-key",
         "response": {
-          "clientDataJSON": "dummyClientDataJSON",
-          "authenticatorData": "dummyAuthenticatorData",
-          "signature": "dummySignature",
-          "userHandle": "dummyUserHandle"
+            "clientDataJSON": "dummyClientDataJSON",
+            "authenticatorData": "dummyAuthenticatorData",
+            "signature": "dummySignature",
+            "userHandle": "dummyUserHandle"
         }
-      }
-    } 
-```
+    }
+}
+  ```
 - **Expected Output**:
   - **Status Code**: 404
   - **Response Body**:
@@ -472,20 +496,20 @@ Its tough to test this functionality without frontend implementation due to simi
 - **Description**: The `authenticationResponse.rawId` does not match any stored credentials for the user.
 - **Input**: Request body in data.json.
 ```json
-	{
-      "username": "alicejohnson",
-      "authenticationResponse": {
+{
+    "username": "alicejohnson",
+    "authenticationResponse": {
         "id": "nonexistentCredentialId",
         "rawId": "nonexistentCredentialId",
         "type": "public-key",
         "response": {
-          "clientDataJSON": "dummyClientDataJSON",
-          "authenticatorData": "dummyAuthenticatorData",
-          "signature": "dummySignature",
-          "userHandle": "dummyUserHandle"
+            "clientDataJSON": "dummyClientDataJSON",
+            "authenticatorData": "dummyAuthenticatorData",
+            "signature": "dummySignature",
+            "userHandle": "dummyUserHandle"
         }
-      }
     }
+}
 ```
 - **Expected Output**:
   - **Status Code**: 404
