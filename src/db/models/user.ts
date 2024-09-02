@@ -58,11 +58,11 @@ User.init({
   },
   GivenNames: {
     type: DataTypes.STRING(50),
-    allowNull: false,
+    allowNull: true,
   },
   Surname: {
     type: DataTypes.STRING(50),
-    allowNull: false,
+    allowNull: true,
   },
   Username: {
     type: DataTypes.STRING(255),
@@ -86,11 +86,11 @@ User.init({
   },
   Email: {
     type: DataTypes.STRING(255),
-    allowNull: true,
+    allowNull: false,
   },
   Password: {
     type: DataTypes.STRING(255),
-    allowNull: true,
+    allowNull: false,
   },
   Passkey: {
     type: DataTypes.STRING(255),
