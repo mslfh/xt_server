@@ -1,5 +1,6 @@
 import express from 'express';
 import AdminJS from 'adminjs';
+import cors from 'cors';
 import { buildAuthenticatedRouter } from '@adminjs/express';
 import CustomAuthProvider from './admin/auth-provider.js';
 import options from './admin/options.js';
@@ -26,8 +27,16 @@ sessionStore.sync();
 const start = async () => {
   const app = express();
 
-  try {
+  // Allow cross-source requests
+  app.use(cors({
+    origin: 'https://www.exertime.me',  
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
+  }));
+  
 
+  try {
     await initializeDb();
     console.log('Database initialized.');
 
@@ -43,9 +52,9 @@ const start = async () => {
       },
       null,
       {
-        secret: process.env.COOKIE_SECRET || 'supersecret-session',
+        secret: process.env.COOKIE_SECRET || 'supersecret-session',  
         resave: false,
-        saveUninitialized: false
+        saveUninitialized: false,
       }
     );
 
@@ -93,7 +102,7 @@ const start = async () => {
     });
 
   } catch (error) {
-    console.error('Failed to start the application:', error);
+    console.error('Failed to start the application.', error);
   }
 };
 

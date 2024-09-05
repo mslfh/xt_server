@@ -89,7 +89,7 @@ User.init({
     allowNull: false,
   },
   Password: {
-    type: DataTypes.STRING(255),
+    type: DataTypes.STRING(255), // Ensure Password is a string type and not undefined
     allowNull: false,
   },
   Passkey: {
@@ -134,6 +134,7 @@ User.init({
   timestamps: false,
 });
 
+// Define the association between User and Department
 User.belongsTo(Department, {
   foreignKey: 'DepartmentID',
   onDelete: 'CASCADE',

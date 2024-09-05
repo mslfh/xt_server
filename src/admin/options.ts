@@ -79,7 +79,7 @@ const options: AdminJSOptions = {
       resource: User,
       options: {
         properties: {
-          ID: { isVisible: { list: true, filter: true, show: true, edit: false } },
+          ID: { isVisible: { list: true, filter: true, show: false, edit: false } },
           DepartmentID: { reference: 'department', isVisible: true },
           CreatedAt: { isVisible: { list: true, filter: true, show: true, edit: false } },
           UpdatedAt: { isVisible: { list: true, filter: true, show: true, edit: false } },
