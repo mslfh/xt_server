@@ -2,20 +2,67 @@ import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../config.js';
 import Department from './department.js';
 
-class User extends Model {}
+// Define an interface for the User model
+interface UserAttributes {
+  ID: string;
+  GivenNames: string;
+  Surname: string;
+  Username: string;
+  DepartmentID?: number;
+  PreferredName?: string;
+  Domain?: string;
+  JobTitle?: string;
+  Email?: string;
+  Password?: string;
+  Passkey?: string;
+  DOB?: Date;
+  Gender?: 'M' | 'F' | 'O' | 'X';
+  Height?: number;
+  Status?: string;
+  AdminFlag?: number;
+  ExitEnabled?: boolean;
+  IsNew?: boolean;
+  CalorieGoal?: number;
+}
+
+// Define a type for the User creation attributes
+interface UserCreationAttributes extends Optional<UserAttributes, 'ID'> { }
+
+// Extend the User class with the UserAttributes interface
+class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
+  public ID!: string;
+  public GivenNames!: string;
+  public Surname!: string;
+  public Username!: string;
+  public DepartmentID?: number;
+  public PreferredName?: string;
+  public Domain?: string;
+  public JobTitle?: string;
+  public Email?: string;
+  public Password?: string;
+  public Passkey?: string;
+  public DOB?: Date;
+  public Gender?: 'M' | 'F' | 'O' | 'X';
+  public Height?: number;
+  public Status?: string;
+  public AdminFlag?: number;
+  public ExitEnabled?: boolean;
+  public IsNew?: boolean;
+  public CalorieGoal?: number;
+}
 
 User.init({
   ID: {
-    type: DataTypes.STRING(36),
+    type: DataTypes.CHAR(36),
     primaryKey: true,
   },
   GivenNames: {
     type: DataTypes.STRING(50),
-    allowNull: false,
+    allowNull: true,
   },
   Surname: {
     type: DataTypes.STRING(50),
-    allowNull: false,
+    allowNull: true,
   },
   Username: {
     type: DataTypes.STRING(255),
@@ -39,11 +86,11 @@ User.init({
   },
   Email: {
     type: DataTypes.STRING(255),
-    allowNull: true,
+    allowNull: false,
   },
   Password: {
-    type: DataTypes.STRING(255),
-    allowNull: true,
+    type: DataTypes.STRING(255), // Ensure Password is a string type and not undefined
+    allowNull: false,
   },
   Passkey: {
     type: DataTypes.STRING(255),
@@ -84,9 +131,10 @@ User.init({
 }, {
   sequelize,
   tableName: 'user',
-  timestamps: false, 
+  timestamps: false,
 });
 
+// Define the association between User and Department
 User.belongsTo(Department, {
   foreignKey: 'DepartmentID',
   onDelete: 'CASCADE',

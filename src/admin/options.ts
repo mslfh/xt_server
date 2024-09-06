@@ -3,7 +3,7 @@ import componentLoader from './component-loader.js';
 import Organisation from '../db/models/organisation.js';
 import Department from '../db/models/department.js';
 import Exercise from '../db/models/exercise.js';
-import User from '../db/models/user.js'; 
+import User from '../db/models/user.js';
 import ExerciseDelay from '../db/models/exerciseDelay.js';
 import UserWeight from '../db/models/userWeight.js';
 import ExerciseDepartment from '../db/models/exerciseDepartment.js';
@@ -76,14 +76,14 @@ const options: AdminJSOptions = {
       },
     },
     {
-      resource: User, 
+      resource: User,
       options: {
         properties: {
-          ID: { isVisible: { list: true, filter: true, show: true, edit: false } },
+          ID: { isVisible: { list: true, filter: true, show: false, edit: false } },
           DepartmentID: { reference: 'department', isVisible: true },
           CreatedAt: { isVisible: { list: true, filter: true, show: true, edit: false } },
           UpdatedAt: { isVisible: { list: true, filter: true, show: true, edit: false } },
-  
+
         },
         actions: {
           new: {
@@ -103,7 +103,7 @@ const options: AdminJSOptions = {
         properties: {
           ID: { isVisible: { list: true, filter: true, show: true, edit: false } },
           UserID: { reference: 'user', isVisible: true },
-          ExerciseID: { reference: 'exercise', isVisible: true},
+          ExerciseID: { reference: 'exercise', isVisible: true },
         },
         actions: {
           new: {
@@ -197,7 +197,7 @@ const options: AdminJSOptions = {
           ID: { isVisible: { list: true, filter: true, show: true, edit: false } },
           UserId: { reference: 'user', isVisible: true },
           WebAuthnUserID: { isVisible: true },
-          PublicKey: { isVisible: true },
+          PublicKey: { isVisible: { list: false, filter: false, show: false, edit: false } },
           Counter: { isVisible: true },
           DeviceType: { isVisible: true },
           BackedUp: { isVisible: true },
@@ -215,7 +215,7 @@ const options: AdminJSOptions = {
         },
       },
     },
-    
+
 
     {
       resource: ExerciseLog,
@@ -349,7 +349,7 @@ const options: AdminJSOptions = {
       resource: UserExerciseLog,
       options: {
         properties: {
-          ID: {isTitle: true, isVisible: { list: true, filter: true, show: true, edit: false } },
+          ID: { isTitle: true, isVisible: { list: true, filter: true, show: true, edit: false } },
           UserID: { reference: 'user', isVisible: true },
           EventID: { reference: 'user_event', isVisible: true },
         },
@@ -382,7 +382,7 @@ const options: AdminJSOptions = {
       options: {
         properties: {
           ExerciseID: { reference: 'exercise', isVisible: true },
-          PlanID: { reference: 'exercise_plan', isVisible: true,  position: 1  },
+          PlanID: { reference: 'exercise_plan', isVisible: true, position: 1 },
           ID: { isVisible: { list: true, filter: true, show: true, edit: false } },
         },
         actions: {
@@ -398,7 +398,7 @@ const options: AdminJSOptions = {
       resource: ExercisePlan,
       options: {
         properties: {
-          ID: {  isTitle: true, isVisible: { list: true, filter: true, show: true, edit: false,} },
+          ID: { isTitle: true, isVisible: { list: true, filter: true, show: true, edit: false, } },
           OrganisationID: { reference: 'Organisation', isVisible: true },
           DepartmentID: { reference: 'department', isVisible: true },
         },
