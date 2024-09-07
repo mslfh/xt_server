@@ -1,19 +1,20 @@
 import { DataTypes, Model, Optional } from 'sequelize';
+import bcrypt from 'bcryptjs'; 
 import sequelize from '../config.js';
 import Department from './department.js';
 
-// Define an interface for the User model
+// Define the attributes for the User model
 interface UserAttributes {
   ID: string;
-  GivenNames: string;
-  Surname: string;
+  GivenNames?: string;
+  Surname?: string;
   Username: string;
   DepartmentID?: number;
   PreferredName?: string;
   Domain?: string;
   JobTitle?: string;
-  Email?: string;
-  Password?: string;
+  Email: string;
+  Password: string;
   Passkey?: string;
   DOB?: Date;
   Gender?: 'M' | 'F' | 'O' | 'X';
@@ -25,21 +26,21 @@ interface UserAttributes {
   CalorieGoal?: number;
 }
 
-// Define a type for the User creation attributes
+// Define the type for creating new User instances
 interface UserCreationAttributes extends Optional<UserAttributes, 'ID'> { }
 
-// Extend the User class with the UserAttributes interface
+// Define the User model class
 class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
   public ID!: string;
-  public GivenNames!: string;
-  public Surname!: string;
+  public GivenNames?: string;
+  public Surname?: string;
   public Username!: string;
   public DepartmentID?: number;
   public PreferredName?: string;
   public Domain?: string;
   public JobTitle?: string;
-  public Email?: string;
-  public Password?: string;
+  public Email!: string;
+  public Password!: string;
   public Passkey?: string;
   public DOB?: Date;
   public Gender?: 'M' | 'F' | 'O' | 'X';
@@ -49,8 +50,14 @@ class User extends Model<UserAttributes, UserCreationAttributes> implements User
   public ExitEnabled?: boolean;
   public IsNew?: boolean;
   public CalorieGoal?: number;
+
+  // Method to compare the given plain password with the hashed password
+  public async validatePassword(plainPassword: string): Promise<boolean> {
+    return bcrypt.compare(plainPassword, this.Password);
+  }
 }
 
+// Initialize the User model
 User.init({
   ID: {
     type: DataTypes.CHAR(36),
@@ -66,7 +73,7 @@ User.init({
   },
   Username: {
     type: DataTypes.STRING(255),
-    allowNull: false,
+    allowNull: false,  // Username cannot be null
   },
   DepartmentID: {
     type: DataTypes.INTEGER.UNSIGNED,
@@ -86,11 +93,11 @@ User.init({
   },
   Email: {
     type: DataTypes.STRING(255),
-    allowNull: false,
+    allowNull: false,  // Email cannot be null
   },
   Password: {
-    type: DataTypes.STRING(255), // Ensure Password is a string type and not undefined
-    allowNull: false,
+    type: DataTypes.STRING(255),
+    allowNull: false,  // Password cannot be null
   },
   Passkey: {
     type: DataTypes.STRING(255),
@@ -127,11 +134,29 @@ User.init({
   CalorieGoal: {
     type: DataTypes.INTEGER,
     allowNull: true,
-  }
+  },
 }, {
   sequelize,
   tableName: 'user',
   timestamps: false,
+
+  // Hooks for password hashing
+  hooks: {
+    // Before creating a new user, hash the password
+    beforeCreate: async (user: User) => {
+      if (user.Password) {
+        const salt = await bcrypt.genSalt(10); 
+        user.Password = await bcrypt.hash(user.Password, salt);
+      }
+    },
+    // Before updating the password, check if it's changed and then hash it
+    beforeUpdate: async (user: User) => {
+      if (user.changed('Password')) { 
+        const salt = await bcrypt.genSalt(10);
+        user.Password = await bcrypt.hash(user.Password, salt);
+      }
+    },
+  },
 });
 
 // Define the association between User and Department
