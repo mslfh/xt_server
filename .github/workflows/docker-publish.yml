@@ -17,25 +17,25 @@ jobs:
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
-      with:
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Extract version number
-      id: vars
-      run: echo "VERSION=$(git describe --tags --always)" >> $GITHUB_ENV
+      - name: Extract version number
+        id: vars
+        run: echo "VERSION=$(git describe --tags --always)" >> $GITHUB_ENV
 
-    - name: Save state
-      run: echo "VERSION=$(git describe --tags --always)" >> $GITHUB_STATE
+      - name: Save state
+        run: echo "VERSION=$(git describe --tags --always)" >> $GITHUB_STATE
 
-    - name: Set output
-      run: echo "version=$(git describe --tags --always)" >> $GITHUB_OUTPUT
+      - name: Set output
+        run: echo "version=$(git describe --tags --always)" >> $GITHUB_OUTPUT
 
-    - name: Build and push Docker image
-      uses: docker/build-push-action@v2
-      with:
-        context: .
-        file: ./Dockerfile
-        push: true
-        tags: ghcr.io/${{ github.repository }}/exertime-image:latest
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ghcr.io/${{ github.repository }}/exertime-image:latest
