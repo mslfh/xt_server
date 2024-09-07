@@ -1,11 +1,11 @@
 import { BaseAuthProvider, LoginHandlerOptions } from 'adminjs';
 import bcrypt from 'bcryptjs';
 import { DEFAULT_ADMIN } from './constants.js';
-import User from '../db/models/user.js';  // 引入用户模型
+import User from '../db/models/user.js';  
 
 class CustomAuthProvider extends BaseAuthProvider {
 
-  // 处理登录逻辑
+  // Handle login logic
   async handleLogin(opts: LoginHandlerOptions) {
     const { data } = opts;
     const { email, password } = data;
@@ -14,78 +14,78 @@ class CustomAuthProvider extends BaseAuthProvider {
     console.log(`Attempting login for email: ${email}`);
     console.log(`Plain password provided: ${password}`);
 
-    // 如果是 Admin 用户
+    // If the user is an Admin
     if (email === adminEmail) {
       console.log('Admin login attempt detected');
-      // 验证 Admin 密码
+      // Verify Admin password
       const isPasswordCorrect = await bcrypt.compare(password, adminPassword);
       if (isPasswordCorrect) {
         console.log('Admin password correct');
-        // 返回管理员信息和角色
+        // Return admin details and role
         return { email: adminEmail, role: 'admin' };
       } else {
         console.log('Admin password incorrect');
-        // 密码错误，返回 null
+        // If password is incorrect, return null
         return null;
       }
     }
 
-    // 如果不是 Admin，检查数据库中是否存在该用户
+    // If not Admin, check the database for the user
     try {
       console.log('Non-admin login attempt, checking database...');
-      // 通过 email 查找用户
+      // Find user by email
       const user = await User.findOne({ where: { Email: email } });
       if (!user) {
         console.log(`No user found with email: ${email}`);
-        return null;  // 如果用户不存在，返回 null
+        return null;  // Return null if user does not exist
       }
 
       console.log(`User found: ${user.Email}, AdminFlag: ${user.AdminFlag}`);
       console.log(`Stored hashed password: ${user.Password}`);
 
-      // 检查用户是否为管理员 (AdminFlag)
+      // Check if the user is an admin (AdminFlag)
       if (user.AdminFlag) {
         console.log('User is an admin, verifying password with bcrypt...');
-        // 如果用户是管理员，使用 bcrypt 验证密码
+        // If user is an admin, verify the password using bcrypt
         const isPasswordCorrect = await bcrypt.compare(password, user.Password);
         if (!isPasswordCorrect) {
           console.log('Admin password in database is incorrect');
-          return null;  // 如果密码错误，返回 null
+          return null;  // Return null if the password is incorrect
         }
         console.log('Admin password correct, login successful');
-        return { email: user.Email, role: 'admin' };  // 管理员登录成功
+        return { email: user.Email, role: 'admin' };  // Admin login successful
       } else {
         console.log('User is not an admin, verifying password with bcrypt...');
-        // 普通用户登录，使用 bcrypt 验证密码
+        // For regular users, verify the password using bcrypt
         const isPasswordCorrect = await bcrypt.compare(password, user.Password);
         console.log(`Password match result: ${isPasswordCorrect}`);
         if (!isPasswordCorrect) {
           console.log('User password incorrect');
-          return null;  // 密码错误，返回 null
+          return null;  // Return null if password is incorrect
         }
         console.log('User password correct, login successful');
-        return { email: user.Email, role: 'user' };  // 普通用户登录成功
+        return { email: user.Email, role: 'user' };  // Regular user login successful
       }
 
     } catch (error) {
-      // 捕获并记录错误
+      // Catch and log any errors
       console.error('Error during login:', error);
       return null;
     }
   }
 
-  // 处理注销逻辑
+  // Handle logout logic
   async handleLogout(context: any) {
     return Promise.resolve();
   }
 
-  // 处理刷新 token 的逻辑
+  // Handle refresh token logic
   async handleRefreshToken(opts: LoginHandlerOptions) {
     const { data } = opts;
     return Promise.resolve({ email: data.email });
   }
 
-  // 配置 UI 属性（根据需要自定义）
+  // Configure UI properties (customize as needed)
   getUiProps() {
     return {};
   }
