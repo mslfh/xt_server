@@ -1,6 +1,6 @@
--- MySQL dump 10.13  Distrib 8.0.39, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 9.0.1, for Linux (x86_64)
 --
--- Host: 127.0.0.1    Database: adminjs
+-- Host: localhost    Database: adminjs
 -- ------------------------------------------------------
 -- Server version	9.0.1
 
@@ -40,6 +40,67 @@ LOCK TABLES `Organisation` WRITE;
 /*!40000 ALTER TABLE `Organisation` DISABLE KEYS */;
 INSERT INTO `Organisation` VALUES (1,'test','test',12,22),(2,'222','222',2,2),(3,'dasad','dsadsa',NULL,0),(4,'organisation','organisationrganisation',NULL,NULL);
 /*!40000 ALTER TABLE `Organisation` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Sessions`
+--
+
+DROP TABLE IF EXISTS `Sessions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `Sessions` (
+  `sid` varchar(36) NOT NULL,
+  `expires` datetime DEFAULT NULL,
+  `data` text,
+  `createdAt` datetime NOT NULL,
+  `updatedAt` datetime NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Sessions`
+--
+
+LOCK TABLES `Sessions` WRITE;
+/*!40000 ALTER TABLE `Sessions` DISABLE KEYS */;
+INSERT INTO `Sessions` VALUES ('DS9PeGI6pDilyl-dcg8sNrHznccG-WTA','2024-09-08 07:08:04','{\"cookie\":{\"originalMaxAge\":null,\"expires\":null,\"secure\":false,\"httpOnly\":true,\"path\":\"/\"},\"adminUser\":{\"email\":\"test1@example.com\",\"role\":\"user\"}}','2024-09-07 07:08:04','2024-09-07 07:08:04'),('kzinrV3_XDqVi9_QxjR6pKqbY9W64G_c','2024-09-08 07:11:44','{\"cookie\":{\"originalMaxAge\":null,\"expires\":null,\"secure\":false,\"httpOnly\":true,\"path\":\"/\"},\"adminUser\":{\"email\":\"test1@example.com\",\"role\":\"user\"}}','2024-09-07 07:11:44','2024-09-07 07:11:44'),('PvlRR5keg4g70RgtloM1_6706obify6U','2024-09-08 08:24:45','{\"cookie\":{\"originalMaxAge\":null,\"expires\":null,\"secure\":false,\"httpOnly\":true,\"path\":\"/\"},\"adminUser\":{\"email\":\"admin@example.com\",\"role\":\"admin\"}}','2024-09-07 06:35:13','2024-09-07 08:24:45'),('T7JLfuGDFv2YKT9FzOGRoDBQrFJ_Z33N','2024-09-08 08:19:39','{\"cookie\":{\"originalMaxAge\":null,\"expires\":null,\"secure\":false,\"httpOnly\":true,\"path\":\"/\"},\"adminUser\":{\"email\":\"admin@example.com\",\"role\":\"admin\"}}','2024-09-07 07:19:04','2024-09-07 08:19:39'),('Y2arRGmi9G3nBVrf6IkPQiDjIQCmoMGJ','2024-09-08 08:28:11','{\"cookie\":{\"originalMaxAge\":null,\"expires\":null,\"secure\":false,\"httpOnly\":true,\"path\":\"/\"},\"adminUser\":{\"email\":\"test1@example.com\",\"role\":\"user\"}}','2024-09-07 08:28:11','2024-09-07 08:28:11');
+/*!40000 ALTER TABLE `Sessions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `credential`
+--
+
+DROP TABLE IF EXISTS `credential`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `credential` (
+  `ID` int unsigned NOT NULL AUTO_INCREMENT,
+  `UserId` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `PublicKey` blob NOT NULL,
+  `WebAuthnUserID` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `Counter` bigint NOT NULL,
+  `DeviceType` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `BackedUp` tinyint(1) NOT NULL,
+  `Transports` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `CreatedAt` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `LastUsed` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`ID`),
+  UNIQUE KEY `credentials__web_authn_user_i_d__user_id` (`WebAuthnUserID`,`UserId`) USING BTREE,
+  UNIQUE KEY `credential__web_authn_user_i_d__user_id` (`WebAuthnUserID`,`UserId`) USING BTREE,
+  KEY `idx_webauthn_user_id` (`WebAuthnUserID`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC COMMENT='For SimpleWebAuthn';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `credential`
+--
+
+LOCK TABLES `credential` WRITE;
+/*!40000 ALTER TABLE `credential` DISABLE KEYS */;
+/*!40000 ALTER TABLE `credential` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -146,54 +207,6 @@ INSERT INTO `exercise_category` VALUES (1,1,'Sport',1),(2,1,'Basketball',1),(3,2
 UNLOCK TABLES;
 
 --
--- Table structure for table `user`
---
-
-DROP TABLE IF EXISTS `user`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `user` (
-  `ID` char(36) NOT NULL,
-  `DepartmentID` int unsigned DEFAULT NULL,
-  `GivenNames` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `Surname` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `PreferredName` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  `Username` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `Domain` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  `JobTitle` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  `Email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  `Password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  `Passkey` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  `DOB` date DEFAULT NULL,
-  `Gender` enum('M','F','O','X') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  `Height` int DEFAULT NULL,
-  `Status` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  `AdminFlag` int DEFAULT NULL,
-  `ExitEnabled` boolean DEFAULT NULL,
-  `IsNew` boolean DEFAULT NULL,
-  `CalorieGoal` int DEFAULT NULL,
-  `CreatedAt` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `UpdatedAt` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`ID`) USING BTREE,
-  KEY `DepartmentID` (`DepartmentID`) USING BTREE,
-  CONSTRAINT `User_ibfk_1` FOREIGN KEY (`DepartmentID`) REFERENCES `department` (`ID`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `user`
---
-
-LOCK TABLES `user` WRITE;
-/*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES ('1', 1, 'John', 'Doe', 'Johnny', 'johndoe', 'example.com', 'Engineer', 'john.doe@example.com', 'password123', 'passkey123', '1990-01-01', 'M', 180, 'A', 1, true, true, 2000, '2024-08-07 16:17:44', '2024-08-07 16:17:44');
-INSERT INTO `user` VALUES ('2', 2, 'Jane', 'Smith', 'Janey', 'janesmith', 'example.com', 'Manager', 'jane.smith@example.com', 'password123', 'passkey123', '1985-05-05', 'F', 165, 'A', 1, true, true, 1800, '2024-08-07 16:17:44', '2024-08-07 16:17:44');
-INSERT INTO `user` VALUES ('3', 1, 'Alice', 'Johnson', 'Ali', 'alicejohnson', 'example.com', 'Analyst', 'alice.johnson@example.com', 'password123', 'passkey123', '1992-02-02', 'F', 170, 'A', 1, false, true, 1900, '2024-08-07 16:17:44', '2024-08-07 17:23:26');
-INSERT INTO `user` VALUES ('4', 3, 'Bob', 'Brown', 'Bobby', 'bobbrown', 'example.com', 'Developer', 'bob.brown@example.com', 'password123', 'passkey123', '1988-08-08', 'M', 175, 'A', 1, true, true, 1950, '2024-08-07 16:17:44', '2024-08-07 16:17:44');
-/*!40000 ALTER TABLE `user` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `exercise_delay`
 --
 
@@ -202,7 +215,7 @@ DROP TABLE IF EXISTS `exercise_delay`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `exercise_delay` (
   `ID` int NOT NULL AUTO_INCREMENT,
-  `UserID` char(36) NOT NULL,
+  `UserID` int unsigned DEFAULT NULL,
   `ExerciseID` int NOT NULL,
   `DateTime` datetime DEFAULT NULL,
   `Duration` float DEFAULT NULL,
@@ -218,7 +231,7 @@ CREATE TABLE `exercise_delay` (
 
 LOCK TABLES `exercise_delay` WRITE;
 /*!40000 ALTER TABLE `exercise_delay` DISABLE KEYS */;
-INSERT INTO `exercise_delay` VALUES (3,'1',2,NULL,NULL),(4,'2',2,'2024-08-06 14:00:00',12);
+INSERT INTO `exercise_delay` VALUES (3,6,2,NULL,NULL),(4,1,2,'2024-08-06 14:00:00',12);
 /*!40000 ALTER TABLE `exercise_delay` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -300,7 +313,7 @@ CREATE TABLE `exercise_log` (
   `StandStartDateTime` datetime DEFAULT NULL,
   `StandEndDateTime` datetime DEFAULT NULL,
   PRIMARY KEY (`ID`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -309,39 +322,8 @@ CREATE TABLE `exercise_log` (
 
 LOCK TABLES `exercise_log` WRITE;
 /*!40000 ALTER TABLE `exercise_log` DISABLE KEYS */;
-INSERT INTO `exercise_log` VALUES (1,1,'4',12,12,'M','2024-08-22 14:00:00','2024-08-22 14:00:00','2024-08-11 14:00:00','2024-07-31 14:00:00'),(2,3,'3',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(3,4,'2',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(4,1,'1',NULL,NULL,'A','2024-08-22 14:00:00','2024-08-04 14:00:00','2024-08-01 14:00:00','2024-08-22 14:00:00'),(5,2,'4',0,12,'A','2024-08-07 14:00:00','2024-08-27 14:00:00','2024-08-05 14:00:00','2024-08-26 14:00:00');
+INSERT INTO `exercise_log` VALUES (1,1,'4',12,12,'M','2024-08-22 14:00:00','2024-08-22 14:00:00','2024-08-11 14:00:00','2024-07-31 14:00:00'),(2,3,'3',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(3,4,'2',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(4,1,'1',NULL,NULL,'A','2024-08-22 14:00:00','2024-08-04 14:00:00','2024-08-01 14:00:00','2024-08-22 14:00:00'),(5,2,'4',0,12,'A','2024-08-07 14:00:00','2024-08-27 14:00:00','2024-08-05 14:00:00','2024-08-26 14:00:00'),(6,1,'2',10,30,'M','2024-09-07 00:00:00','2024-09-07 00:00:00',NULL,NULL);
 /*!40000 ALTER TABLE `exercise_log` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `question`
---
-
-DROP TABLE IF EXISTS `question`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `question` (
-  `ID` int NOT NULL AUTO_INCREMENT,
-  `Caption` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `Order` int DEFAULT NULL,
-  `MinCaption` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  `MaxCaption` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  `Status` enum('A','I','D') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  `StartTime` datetime DEFAULT NULL,
-  `EndTime` datetime DEFAULT NULL,
-  `Type` enum('MC','TEXT','RATING') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  PRIMARY KEY (`ID`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `question`
---
-
-LOCK TABLES `question` WRITE;
-/*!40000 ALTER TABLE `question` DISABLE KEYS */;
-INSERT INTO `question` VALUES (1,'12',NULL,NULL,NULL,'I','2024-08-21 14:00:00','2024-08-30 14:00:00','MC'),(2,'dad',NULL,NULL,NULL,'I','2024-07-31 14:00:00','2024-08-28 14:00:00','RATING'),(3,'12',NULL,NULL,NULL,'I','2024-08-01 14:00:00','2024-08-29 14:00:00','TEXT');
-/*!40000 ALTER TABLE `question` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -464,6 +446,37 @@ INSERT INTO `organisation` VALUES (1,'Default','Default Organization',0,0),(2,'O
 UNLOCK TABLES;
 
 --
+-- Table structure for table `question`
+--
+
+DROP TABLE IF EXISTS `question`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `question` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `Caption` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `Order` int DEFAULT NULL,
+  `MinCaption` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `MaxCaption` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `Status` enum('A','I','D') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `StartTime` datetime DEFAULT NULL,
+  `EndTime` datetime DEFAULT NULL,
+  `Type` enum('MC','TEXT','RATING') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  PRIMARY KEY (`ID`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `question`
+--
+
+LOCK TABLES `question` WRITE;
+/*!40000 ALTER TABLE `question` DISABLE KEYS */;
+INSERT INTO `question` VALUES (1,'12',NULL,NULL,NULL,'I','2024-08-21 14:00:00','2024-08-30 14:00:00','MC'),(2,'dad',NULL,NULL,NULL,'I','2024-07-31 14:00:00','2024-08-28 14:00:00','RATING'),(3,'12',NULL,NULL,NULL,'I','2024-08-01 14:00:00','2024-08-29 14:00:00','TEXT');
+/*!40000 ALTER TABLE `question` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `survey_response`
 --
 
@@ -472,7 +485,7 @@ DROP TABLE IF EXISTS `survey_response`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `survey_response` (
   `ID` int unsigned NOT NULL AUTO_INCREMENT,
-  `UserID` char(36) NOT NULL,
+  `UserID` int unsigned DEFAULT NULL,
   `Date` date DEFAULT NULL,
   `DaysWorked` int DEFAULT NULL,
   `HoursWorked` int DEFAULT NULL,
@@ -492,8 +505,53 @@ CREATE TABLE `survey_response` (
 
 LOCK TABLES `survey_response` WRITE;
 /*!40000 ALTER TABLE `survey_response` DISABLE KEYS */;
-INSERT INTO `survey_response` VALUES (1,'3','2024-08-20',12,21,12,21,2121,12),(2,'2','2024-08-20',12,12,12,12,12,12);
+INSERT INTO `survey_response` VALUES (1,3,'2024-08-20',12,21,12,21,2121,12),(2,3,'2024-08-20',12,12,12,12,12,12);
 /*!40000 ALTER TABLE `survey_response` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `user`
+--
+
+DROP TABLE IF EXISTS `user`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `user` (
+  `ID` int unsigned NOT NULL AUTO_INCREMENT,
+  `DepartmentID` int unsigned DEFAULT NULL,
+  `GivenNames` varchar(50) DEFAULT NULL,
+  `Surname` varchar(50) DEFAULT NULL,
+  `PreferredName` varchar(50) DEFAULT NULL,
+  `Username` varchar(255) NOT NULL,
+  `Domain` varchar(255) DEFAULT NULL,
+  `JobTitle` varchar(50) DEFAULT NULL,
+  `Email` varchar(255) NOT NULL,
+  `Password` varchar(255) NOT NULL,
+  `Passkey` varchar(255) DEFAULT NULL,
+  `DOB` date DEFAULT NULL,
+  `Gender` enum('M','F','O','X') DEFAULT NULL,
+  `Height` int DEFAULT NULL,
+  `Status` char(1) DEFAULT NULL,
+  `AdminFlag` int DEFAULT NULL,
+  `ExitEnabled` tinyint(1) DEFAULT NULL,
+  `IsNew` tinyint(1) DEFAULT NULL,
+  `CalorieGoal` int DEFAULT NULL,
+  `CreatedAt` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `UpdatedAt` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`ID`) USING BTREE,
+  KEY `DepartmentID` (`DepartmentID`) USING BTREE,
+  CONSTRAINT `User_ibfk_1` FOREIGN KEY (`DepartmentID`) REFERENCES `department` (`ID`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user`
+--
+
+LOCK TABLES `user` WRITE;
+/*!40000 ALTER TABLE `user` DISABLE KEYS */;
+INSERT INTO `user` VALUES (1,1,'John','DoeUpdated','Johnny','johndoe','example.com','Engineer','john.doe.updated@example.com','password123','passkey123','1990-01-01','M',180,'A',1,1,1,2100,'2024-08-07 16:17:44','2024-08-25 12:14:36'),(2,2,'Jane','Smith','Janey','janesmith','example.com','Manager','jane.smith@example.com','password123','passkey123','1985-05-05','F',165,'A',1,1,1,1800,'2024-08-07 16:17:44','2024-08-07 16:17:44'),(3,1,'Alice','Johnson','Ali','alicejohnson','example.com','Analyst','alice.johnson@example.com','password123','passkey123','1992-02-02','F',170,'A',1,0,1,1900,'2024-08-07 16:17:44','2024-08-07 17:23:26'),(4,3,'Bob','Brown','Bobby','bobbrown','example.com','Developer','bob.brown@example.com','password123','passkey123','1988-08-08','M',175,'A',1,1,1,1950,'2024-08-07 16:17:44','2024-08-07 16:17:44'),(6,NULL,'adasddsad','sdddd',NULL,'default_username',NULL,NULL,'default_email','default_password',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2024-08-21 12:41:30','2024-09-07 06:41:25'),(11,2,'123','1221','21121','default_username',NULL,NULL,'default_email','default_password',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2024-08-26 04:09:59','2024-09-07 06:41:25'),(22,NULL,'','',NULL,'532452',NULL,NULL,'kyonccw@outlook.com','$2a$10$UaLPxrAaGKf.cvZoNZoMne6oV1w58s3A8pKUYCrqVRfaBYvfuvLp6',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2024-09-05 09:37:19','2024-09-05 09:37:19'),(23,NULL,'','',NULL,'test',NULL,NULL,'kyonccw@outlook.com','$2a$10$QwCvt87KDirOGzQj44cFg.wRx6zVZy/9uXfdgm4RbfHXaby0fj8/q',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2024-09-05 12:01:15','2024-09-05 12:01:15'),(24,NULL,'cccc','cc',NULL,'test',NULL,NULL,'kyonccw1@outlook.com','testtest1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2024-09-05 12:33:43','2024-09-05 12:33:43'),(25,NULL,'','',NULL,'test123',NULL,NULL,'shuizhiyu0831@gmail.com','$2a$10$obsLRm5DFxmtl0lb4S3JYeWm.sMuW2BM3tGZpezwegNlbuUdpJpE.',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2024-09-07 06:45:40','2024-09-07 06:45:40'),(26,NULL,NULL,NULL,NULL,'testuser',NULL,NULL,'test@example.com','$2a$10$E6Ilx/dEDUBTbzjzcfFq6.BAbcdEfghijKLMNOPQRSTUv',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2024-09-07 06:48:41','2024-09-07 06:48:41'),(27,NULL,NULL,NULL,NULL,'testuser',NULL,NULL,'test@example.com','$2a$10$someGeneratedHashValue',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2024-09-07 07:04:07','2024-09-07 07:04:07'),(28,NULL,NULL,NULL,NULL,'testuser1',NULL,NULL,'test1@example.com','$2a$10$njLgzLnIb8Jp8s8cITXa6.7c38UnILY7OOTBsCYviCGfrbW0u2RWO',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2024-09-07 07:06:36','2024-09-07 07:11:17');
+/*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -505,7 +563,7 @@ DROP TABLE IF EXISTS `user_event`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `user_event` (
   `ID` int NOT NULL AUTO_INCREMENT,
-  `UserID` char(36) NOT NULL,
+  `UserID` int unsigned DEFAULT NULL,
   `Date` date DEFAULT NULL,
   `EventType` int DEFAULT NULL,
   PRIMARY KEY (`ID`) USING BTREE,
@@ -520,7 +578,7 @@ CREATE TABLE `user_event` (
 
 LOCK TABLES `user_event` WRITE;
 /*!40000 ALTER TABLE `user_event` DISABLE KEYS */;
-INSERT INTO `user_event` VALUES (1,'1','2024-08-07',0),(2,'3',NULL,NULL),(3,'2','2024-08-20',0);
+INSERT INTO `user_event` VALUES (1,1,'2024-08-07',0),(2,3,NULL,NULL),(3,3,'2024-08-20',0);
 /*!40000 ALTER TABLE `user_event` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -567,7 +625,7 @@ CREATE TABLE `user_favorite` (
   `CreatedAt` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`ID`) USING BTREE,
   KEY `ExerciseID` (`ExerciseID`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -576,7 +634,7 @@ CREATE TABLE `user_favorite` (
 
 LOCK TABLES `user_favorite` WRITE;
 /*!40000 ALTER TABLE `user_favorite` DISABLE KEYS */;
-INSERT INTO `user_favorite` VALUES (1,'3',1,'2024-08-07 14:00:00'),(3,'2',3,'2024-07-31 14:00:00');
+INSERT INTO `user_favorite` VALUES (1,'3',2,'2024-08-07 14:00:00'),(3,'2',3,'2024-07-31 14:00:00'),(4,'2',1,'2024-09-07 00:00:00');
 /*!40000 ALTER TABLE `user_favorite` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -589,7 +647,7 @@ DROP TABLE IF EXISTS `user_position`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `user_position` (
   `ID` int unsigned NOT NULL AUTO_INCREMENT,
-  `UserID` char(36) NOT NULL,
+  `UserID` int unsigned DEFAULT NULL,
   `Date` datetime DEFAULT NULL,
   `Position` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   PRIMARY KEY (`ID`) USING BTREE,
@@ -604,7 +662,7 @@ CREATE TABLE `user_position` (
 
 LOCK TABLES `user_position` WRITE;
 /*!40000 ALTER TABLE `user_position` DISABLE KEYS */;
-INSERT INTO `user_position` VALUES (1,'3','2024-08-13 14:00:00','test'),(2,'2','2024-08-22 14:00:00','test2');
+INSERT INTO `user_position` VALUES (1,3,'2024-08-13 14:00:00','test'),(2,2,'2024-08-22 14:00:00','test2');
 /*!40000 ALTER TABLE `user_position` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -617,11 +675,11 @@ DROP TABLE IF EXISTS `user_setting`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `user_setting` (
   `ID` int NOT NULL AUTO_INCREMENT,
-  `UserID` char(36) NOT NULL,
+  `UserID` int DEFAULT NULL,
   `Content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `Value` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   PRIMARY KEY (`ID`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC COMMENT='For store user setting like allow notification etc.';
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC COMMENT='For store user setting like allow notification etc.';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -630,7 +688,7 @@ CREATE TABLE `user_setting` (
 
 LOCK TABLES `user_setting` WRITE;
 /*!40000 ALTER TABLE `user_setting` DISABLE KEYS */;
-INSERT INTO `user_setting` VALUES (1,'4','sadasd',NULL),(2,'2','jkhkhj',NULL),(3,'2','dasdasdas','dasdas');
+INSERT INTO `user_setting` VALUES (1,4,'sadasd','light'),(2,2,'jkhkhj',NULL),(3,2,'dasdasdas','dasdas'),(4,1,'user preferences','dark');
 /*!40000 ALTER TABLE `user_setting` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -643,7 +701,7 @@ DROP TABLE IF EXISTS `user_weight`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `user_weight` (
   `ID` int unsigned NOT NULL AUTO_INCREMENT,
-  `UserID` char(36) NOT NULL,
+  `UserID` int unsigned DEFAULT NULL,
   `Date` datetime DEFAULT NULL,
   `Weight` int DEFAULT NULL,
   PRIMARY KEY (`ID`) USING BTREE,
@@ -658,78 +716,10 @@ CREATE TABLE `user_weight` (
 
 LOCK TABLES `user_weight` WRITE;
 /*!40000 ALTER TABLE `user_weight` DISABLE KEYS */;
-INSERT INTO `user_weight` VALUES (1,'4','2024-08-07 14:00:00',123),(2,'2','2024-08-15 14:00:00',122),(3,'1','2024-08-27 14:00:00',1212);
+INSERT INTO `user_weight` VALUES (1,4,'2024-08-07 14:00:00',123),(2,2,'2024-08-15 14:00:00',122),(3,1,'2024-08-27 14:00:00',1212);
 /*!40000 ALTER TABLE `user_weight` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-
---
--- Table structure for table `credential`
---
-
-DROP TABLE IF EXISTS `credential`;
-CREATE TABLE `credential` (
-  `ID` char(36) NOT NULL,
-  `UserId` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `PublicKey` blob NOT NULL,
-  `WebAuthnUserID` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `Counter` bigint NOT NULL,
-  `DeviceType` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  `BackedUp` boolean NOT NULL,
-  `Transports` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  `CreatedAt` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `LastUsed` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`ID`),
-  UNIQUE KEY `credentials__web_authn_user_i_d__user_id` (`WebAuthnUserID`,`UserId`) USING BTREE,
-  UNIQUE KEY `credential__web_authn_user_i_d__user_id` (`WebAuthnUserID`,`UserId`) USING BTREE,
-  KEY `idx_webauthn_user_id` (`WebAuthnUserID`) USING BTREE,
-  CONSTRAINT `fk_userid` FOREIGN KEY (`UserId`) REFERENCES `user` (`ID`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC COMMENT='For SimpleWebAuthn';
-
---
--- Dumping data for table `credential`
---
-
-LOCK TABLES `credential` WRITE;
-/*!40000 ALTER TABLE `credential` DISABLE KEYS */;
-INSERT INTO credential (ID, UserId, PublicKey, WebAuthnUserID, Counter, DeviceType, BackedUp, Transports)
-VALUES (
-    '1',
-    '3',
-    0x3059301306072A8648CE3D020106082A8648CE3D03010703420004B0BD680CE97E43E8F1163458B8E70238B4510CBF6803D11A3B6BC9E9B8D17B0A1F702DD0B831D3A5358F6CE7F9B2CC60C6E08AB8D8F1112BBF1672B86580D1EF,
-    '17aab4d0-8bfc-11eb-8dcd-0242ac130003',
-    0,
-    'smartphone',
-    true,
-    'usb'
-);
-
-INSERT INTO credential (ID, UserId, PublicKey, WebAuthnUserID, Counter, DeviceType, BackedUp, Transports)
-VALUES (
-    '2',
-    '4',
-    0x3059301306072A8648CE3D020106082A8648CE3D03010703420004C0BD680CE97E43E8F1163458B8E70238B4510CBF6803D11A3B6BC9E9B8D17B0A1F702DD0B831D3A5358F6CE7F9B2CC60C6E08AB8D8F1112BBF1672B86580D2EF,
-    '17aab4d0-8bfc-11eb-8dcd-0242ac130004',
-    0,
-    'tablet',
-    true,
-    'nfc'
-);
-/*!40000 ALTER TABLE `credential` ENABLE KEYS */;
-UNLOCK TABLES;
-
--- 
--- Table for session management
--- 
-
-CREATE TABLE `sessions` (
-  `sid` varchar(255) NOT NULL,
-  `expires` datetime NOT NULL,
-  `data` text,
-  `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updatedAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
@@ -739,4 +729,4 @@ CREATE TABLE `sessions` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-08-25 23:25:33
+-- Dump completed on 2024-09-07 15:12:12
