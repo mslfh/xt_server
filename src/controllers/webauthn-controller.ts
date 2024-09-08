@@ -205,3 +205,30 @@ export const verifyAuthentication = async (req: Request, res: Response) => {
         return res.status(500).send('Verification failed');
     }
 };
+
+export const checkEmailAndPassword = async (req: Request, res: Response) => {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        return res.status(400).json({ error: 'Email and password are required' });
+    }
+
+    try {
+        // Find user by email
+        const user = await User.findOne({ where: { Email: email } });
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        // Validate the password
+        if (user.Password !== password) {
+            return res.status(401).json({ error: 'Invalid email or password' });
+        }
+
+        // Return success response if email and password match
+        return res.json({ status: 'ok', message: 'Email and password are correct' });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+};

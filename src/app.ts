@@ -29,12 +29,12 @@ const start = async () => {
 
   // Allow cross-source requests
   app.use(cors({
-    origin: 'https://www.exertime.me',  
+    origin: ['https://www.exertime.me', 'http://localhost:9000'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
   }));
-  
+
 
   try {
     await initializeDb();
@@ -52,7 +52,7 @@ const start = async () => {
       },
       null,
       {
-        secret: process.env.COOKIE_SECRET || 'supersecret-session',  
+        secret: process.env.COOKIE_SECRET || 'supersecret-session',
         resave: false,
         saveUninitialized: false,
       }
