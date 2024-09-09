@@ -77,10 +77,10 @@ DROP TABLE IF EXISTS `credential`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `credential` (
-  `ID` int unsigned NOT NULL AUTO_INCREMENT,
+  `ID` char(255) NOT NULL,
   `UserId` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `PublicKey` blob NOT NULL,
-  `WebAuthnUserID` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `WebAuthnUserID` char(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `Counter` bigint NOT NULL,
   `DeviceType` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `BackedUp` tinyint(1) NOT NULL,

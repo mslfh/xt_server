@@ -14,7 +14,7 @@ class Credentials extends Model {
 
 Credentials.init({
   ID: {
-    type: DataTypes.CHAR(36),
+    type: DataTypes.CHAR(255), // Changed from CHAR(36) to CHAR(255)
     primaryKey: true,
     allowNull: false,
   },
@@ -33,7 +33,7 @@ Credentials.init({
     allowNull: true,
   },
   WebAuthnUserID: {
-    type: DataTypes.CHAR(36),
+    type: DataTypes.CHAR(255), // Changed from CHAR(36) to CHAR(255)
     allowNull: false,
   },
   Counter: {

@@ -14,7 +14,7 @@ import User from '../db/models/user.js';
 
 const rpName = process.env.RP_NAME!;
 const rpID = process.env.RP_ID!;
-const origin = process.env.ORIGIN!;
+const origin = process.env.FRONTEND_ORIGIN!;
 const timeout = parseInt(process.env.TIMEOUT_MS!, 10);
 
 // Define the base64ToBase64URL function to convert Base64 to Base64URL format
@@ -28,12 +28,12 @@ export const registrationOptions = async (req: Request, res: Response) => {
     const { username } = req.body;
 
     if (!username) {
-        return res.status(400).json({ error: 'Username is required' });
+        return res.status(400).json({ error: 'Username is required.' });
     }
 
     const user = await User.findOne({ where: { Username: username } });
     if (!user) {
-        return res.status(404).json({ error: 'User not found' });
+        return res.status(404).json({ error: 'User not found.' });
     }
 
     const userID = new TextEncoder().encode(user.ID);
@@ -70,19 +70,19 @@ export const verifyRegistration = async (req: Request, res: Response) => {
 
     // Check for required fields in the request body
     if (!username || !attestationResponse) {
-        return res.status(400).json({ error: 'Username and attestationResponse are required' });
+        return res.status(400).json({ error: 'Username and attestationResponse are required.' });
     }
 
     const user = await User.findOne({ where: { Username: username } });
     if (!user) {
-        return res.status(404).json({ error: 'User not found' });
+        return res.status(404).json({ error: 'User not found.' });
     }
 
     try {
         const storedChallenge = req.session.challenge;
 
         if (!storedChallenge) {
-            return res.status(400).json({ error: 'Challenge not found in session' });
+            return res.status(400).json({ error: 'Challenge not found in session.' });
         }
 
         // Convert id and rawId to Base64URL format
@@ -107,9 +107,13 @@ export const verifyRegistration = async (req: Request, res: Response) => {
                 Counter: counter,
             });
 
+            // Update the Passkey field in the User table
+            user.Passkey = credentialID;
+            await user.save();
+
             req.session.challenge = null; // Clear the challenge from the session
 
-            return res.json({ status: 'ok' });
+            return res.status(200).json({ status: 'ok', message: 'Registration with passkey successful!' });
         } else {
             return res.status(400).json({ status: 'failed' });
         }
@@ -124,12 +128,12 @@ export const authenticationOptions = async (req: Request, res: Response) => {
     const { username } = req.body;
 
     if (!username) {
-        return res.status(400).json({ error: 'Username is required' });
+        return res.status(400).json({ error: 'Username is required.' });
     }
 
     const user = await User.findOne({ where: { Username: username } });
     if (!user) {
-        return res.status(404).json({ error: 'User not found' });
+        return res.status(404).json({ error: 'User not found.' });
     }
 
     const credentials = await Credentials.findAll({ where: { UserID: user.ID } });
@@ -155,12 +159,12 @@ export const verifyAuthentication = async (req: Request, res: Response) => {
     const { username, authenticationResponse } = req.body;
 
     if (!username || !authenticationResponse) {
-        return res.status(400).json({ error: 'Username and authenticationResponse are required' });
+        return res.status(400).json({ error: 'Username and authenticationResponse are required.' });
     }
 
     const user = await User.findOne({ where: { Username: username } });
     if (!user) {
-        return res.status(404).json({ error: 'User not found' });
+        return res.status(404).json({ error: 'User not found.' });
     }
 
     try {
@@ -169,13 +173,13 @@ export const verifyAuthentication = async (req: Request, res: Response) => {
         });
 
         if (!credential) {
-            return res.status(404).json({ error: 'Credential not found' });
+            return res.status(404).json({ error: 'Credential not found.' });
         }
 
         const storedChallenge = req.session.challenge;
 
         if (!storedChallenge) {
-            return res.status(400).json({ error: 'Challenge not found in session' });
+            return res.status(400).json({ error: 'Challenge not found in session.' });
         }
 
         const verification = await verifyAuthenticationResponse({
@@ -196,7 +200,7 @@ export const verifyAuthentication = async (req: Request, res: Response) => {
 
             req.session.challenge = null; // Clear the challenge from the session
 
-            return res.json({ status: 'ok', username: user.Username });
+            return res.status(200).json({ status: 'ok', username: user.Username });
         } else {
             return res.status(400).json({ status: 'failed' });
         }
@@ -210,23 +214,23 @@ export const checkEmailAndPassword = async (req: Request, res: Response) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-        return res.status(400).json({ error: 'Email and password are required' });
+        return res.status(400).json({ error: 'Email and password are required.' });
     }
 
     try {
         // Find user by email
         const user = await User.findOne({ where: { Email: email } });
         if (!user) {
-            return res.status(404).json({ error: 'User not found' });
+            return res.status(404).json({ error: 'User not found.' });
         }
 
         // Validate the password
         if (user.Password !== password) {
-            return res.status(401).json({ error: 'Invalid email or password' });
+            return res.status(401).json({ error: 'Invalid email or password.' });
         }
 
         // Return success response if email and password match
-        return res.json({ status: 'ok', message: 'Email and password are correct' });
+        return res.status(200).json({ status: 'ok', message: 'Email and password are correct.' });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ error: 'Internal server error' });

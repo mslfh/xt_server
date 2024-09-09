@@ -1,5 +1,5 @@
 import { DataTypes, Model, Optional } from 'sequelize';
-import bcrypt from 'bcryptjs'; 
+import bcrypt from 'bcryptjs';
 import sequelize from '../config.js';
 import Department from './department.js';
 
@@ -100,7 +100,7 @@ User.init({
     allowNull: false,  // Password cannot be null
   },
   Passkey: {
-    type: DataTypes.STRING(255),
+    type: DataTypes.STRING(255), // Stores credentialID for WebAuthn
     allowNull: true,
   },
   DOB: {
@@ -145,13 +145,13 @@ User.init({
     // Before creating a new user, hash the password
     beforeCreate: async (user: User) => {
       if (user.Password) {
-        const salt = await bcrypt.genSalt(10); 
+        const salt = await bcrypt.genSalt(10);
         user.Password = await bcrypt.hash(user.Password, salt);
       }
     },
     // Before updating the password, check if it's changed and then hash it
     beforeUpdate: async (user: User) => {
-      if (user.changed('Password')) { 
+      if (user.changed('Password')) {
         const salt = await bcrypt.genSalt(10);
         user.Password = await bcrypt.hash(user.Password, salt);
       }
