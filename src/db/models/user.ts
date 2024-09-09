@@ -66,10 +66,12 @@ User.init({
   GivenNames: {
     type: DataTypes.STRING(50),
     allowNull: true,
+    defaultValue: '',
   },
   Surname: {
     type: DataTypes.STRING(50),
     allowNull: true,
+    defaultValue: '',
   },
   Username: {
     type: DataTypes.STRING(255),
@@ -78,18 +80,22 @@ User.init({
   DepartmentID: {
     type: DataTypes.INTEGER.UNSIGNED,
     allowNull: true,
+    defaultValue: null,
   },
   PreferredName: {
     type: DataTypes.STRING(50),
     allowNull: true,
+    defaultValue: '',
   },
   Domain: {
     type: DataTypes.STRING(255),
     allowNull: true,
+    defaultValue: '',
   },
   JobTitle: {
     type: DataTypes.STRING(50),
     allowNull: true,
+    defaultValue: '',
   },
   Email: {
     type: DataTypes.STRING(255),
@@ -102,38 +108,47 @@ User.init({
   Passkey: {
     type: DataTypes.STRING(255), // Stores credentialID for WebAuthn
     allowNull: true,
+    defaultValue: '',
   },
   DOB: {
     type: DataTypes.DATE,
     allowNull: true,
+    defaultValue: null,
   },
   Gender: {
     type: DataTypes.ENUM('M', 'F', 'O', 'X'),
     allowNull: true,
+    defaultValue: 'X',
   },
   Height: {
     type: DataTypes.INTEGER,
     allowNull: true,
+    defaultValue: null,
   },
   Status: {
     type: DataTypes.CHAR(1),
     allowNull: true,
+    defaultValue: 'A',
   },
   AdminFlag: {
     type: DataTypes.INTEGER,
     allowNull: true,
+    defaultValue: 0,
   },
   ExitEnabled: {
     type: DataTypes.BOOLEAN,
     allowNull: true,
+    defaultValue: false,
   },
   IsNew: {
     type: DataTypes.BOOLEAN,
     allowNull: true,
+    defaultValue: true,
   },
   CalorieGoal: {
     type: DataTypes.INTEGER,
     allowNull: true,
+    defaultValue: 2000,
   },
 }, {
   sequelize,
