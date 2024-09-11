@@ -1,14 +1,4 @@
 {
-    "username": "alicejohnson",
-    "authenticationResponse": {
-        "id": "1",
-        "rawId": "1",
-        "type": "public-key",
-        "response": {
-            "clientDataJSON": "validClientDataJSON",
-            "authenticatorData": "validAuthenticatorData",
-            "signature": "validSignature",
-            "userHandle": "validUserHandle"
-        }
-    }
+    "email": "alice.johnson@example.com",
+    "password": "password123"
 }

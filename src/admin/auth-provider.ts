@@ -1,71 +1,84 @@
 import { BaseAuthProvider, LoginHandlerOptions } from 'adminjs';
 import bcrypt from 'bcryptjs';
 import { DEFAULT_ADMIN } from './constants.js';
-import User from '../db/models/user.js';  // Import the User model
+import User from '../db/models/user.js';  
 
 class CustomAuthProvider extends BaseAuthProvider {
 
-  // Handle the login logic
+  // Handle login logic
   async handleLogin(opts: LoginHandlerOptions) {
     const { data } = opts;
-    const { email, password } = data;
+    const { email, password, microsoftEmail, oid, sub } = data;  // Added microsoftEmail, oid, sub
     const { email: adminEmail, password: adminPassword } = DEFAULT_ADMIN;
 
-    // Check if the login attempt is for the default admin account
+    console.log(`Attempting login for email: ${email}`);
+    console.log(`Plain password provided: ${password}`);
+
+    // Admin Login Logic
     if (email === adminEmail) {
-      // Verify admin password using bcrypt
+      console.log('Admin login attempt detected');
       const isPasswordCorrect = await bcrypt.compare(password, adminPassword);
       if (isPasswordCorrect) {
-        // If password is correct, return admin details with the 'admin' role
+        console.log('Admin password correct');
         return { email: adminEmail, role: 'admin' };
+      } else {
+        console.log('Admin password incorrect');
+        return null;
       }
-      // Return null if the admin password is incorrect
-      return null;
     }
 
-    // If not admin, check for a regular user in the database
+    // Microsoft Account Login Logic
+    if (microsoftEmail && oid && sub) {
+      try {
+        console.log('Microsoft login attempt, checking database...');
+        const user = await User.findOne({ where: { microsoftEmail, oid, sub } });
+        if (!user || !user.isLinked) {
+          console.log('No linked Microsoft account found');
+          return null;  // Return null if no matching Microsoft account
+        }
+        console.log(`Microsoft User found: ${user.microsoftEmail}, login successful`);
+        return { email: user.microsoftEmail, role: 'user' };  // Microsoft login successful
+      } catch (error) {
+        console.error('Error during Microsoft login:', error);
+        return null;
+      }
+    }
+
+    // Non-admin login logic for regular email/password users
     try {
-      // Find the user in the database by email
+      console.log('Non-admin login attempt, checking database...');
       const user = await User.findOne({ where: { Email: email } });
       if (!user) {
-        return null;  // Return null if the user does not exist
+        console.log(`No user found with email: ${email}`);
+        return null;
       }
 
-      // Check if the user is an admin (AdminFlag is set)
-      if (user.AdminFlag) {
-        // If the user is an admin, verify the password using bcrypt
-        const isPasswordCorrect = await bcrypt.compare(password, user.Password);
-        if (!isPasswordCorrect) {
-          return null;  // Return null if the password is incorrect
-        }
-        return { email: user.Email, role: 'admin' };  // Admin login successful
-      } else {
-        // If the user is not an admin, compare the password as plain text
-        if (password !== user.Password) {
-          return null;  // Return null if the password does not match
-        }
-        return { email: user.Email, role: 'user' };  // User login successful
+      console.log(`User found: ${user.Email}, AdminFlag: ${user.AdminFlag}`);
+      const isPasswordCorrect = await bcrypt.compare(password, user.Password);
+      if (!isPasswordCorrect) {
+        console.log('User password incorrect');
+        return null;
       }
+
+      const role = user.AdminFlag ? 'admin' : 'user';
+      console.log(`User password correct, login successful as ${role}`);
+      return { email: user.Email, role };  // Regular login successful
 
     } catch (error) {
-      // Log any errors during the login process and return null
       console.error('Error during login:', error);
       return null;
     }
   }
 
-  // Handle logout logic (no action needed here for now)
   async handleLogout(context: any) {
     return Promise.resolve();
   }
 
-  // Handle token refresh logic (for session management)
   async handleRefreshToken(opts: LoginHandlerOptions) {
     const { data } = opts;
     return Promise.resolve({ email: data.email });
   }
 
-  // Configure UI properties (can be customized if needed)
   getUiProps() {
     return {};
   }
