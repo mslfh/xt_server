@@ -3,6 +3,7 @@
 -- Host: localhost    Database: adminjs
 -- ------------------------------------------------------
 -- Server version	9.0.1
+USE adminjs;
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;

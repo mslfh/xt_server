@@ -3,14 +3,28 @@ services:
   adminjs:
     build: .
     container_name: adminjs-container
-    env_file: .env
     ports:
-      - "3000:3000"
+      - "5000:5000"
+    environment:
+      DATABASE_URL: mysql://root:adminjs@localhost:3306/adminjs
+      DATABASE_DIALECT: mysql
+      DATABASE_NAME: adminjs
+      DATABASE_HOST: localhost
+      DATABASE_USER: root
+      DATABASE_PASSWORD: root
+      COOKIE_SECRET: QmutO5X71dgE4p8GiU57YAxMCb6f6vm9
+      SESSION_SECRET: 6f8e023b1f1a4b32a915aa7f6725f3d1
+      ORIGIN: https://localhost:5000
+      RP_NAME: exertime_application
+      RP_ID: localhost
+      TIMEOUT_MS: 60000
+      COOKIE_MAX_AGE: 86400000 # 1 day in milliseconds
+      JWT_SECRET: 9a0b0cc4b03b47c9a1c8c16f7a0569a6
+      JWT_EXPIRATION: 1h
+      FRONTEND_ORIGIN: https://localhost:9000
     depends_on:
       - mysql
-    networks:
-      - my-network
-    restart: always
+    network_mode: host
 
   mysql:
     image: mysql:latest
@@ -29,11 +43,6 @@ services:
       - db_data:/var/lib/mysql
       - ./adminjs_backup.sql:/docker-entrypoint-initdb.d/adminjs_backup.sql
       - ./mysql-general-log.log:/tmp/mysql-general-log.log
-    networks:
-      - my-network
-
+    network_mode: host
 volumes:
   db_data:
-
-networks:
-  my-network:
