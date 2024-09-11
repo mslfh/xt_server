@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import sequelize from '../config.js';
 import Department from './department.js';
 
-// Define the attributes for the User model
+// Define the attributes for the User model, including the new attributes
 interface UserAttributes {
   ID: string;
   GivenNames?: string;
@@ -24,6 +24,11 @@ interface UserAttributes {
   ExitEnabled?: boolean;
   IsNew?: boolean;
   CalorieGoal?: number;
+  // New attributes
+  microsoftEmail?: string;
+  oid?: string;
+  sub?: string;
+  isLinked?: boolean;
 }
 
 // Define the type for creating new User instances
@@ -50,6 +55,10 @@ class User extends Model<UserAttributes, UserCreationAttributes> implements User
   public ExitEnabled?: boolean;
   public IsNew?: boolean;
   public CalorieGoal?: number;
+  public microsoftEmail?: string;
+  public oid?: string;
+  public sub?: string;
+  public isLinked?: boolean;
 
   // Method to compare the given plain password with the hashed password
   public async validatePassword(plainPassword: string): Promise<boolean> {
@@ -73,7 +82,7 @@ User.init({
   },
   Username: {
     type: DataTypes.STRING(255),
-    allowNull: false,  // Username cannot be null
+    allowNull: false,
   },
   DepartmentID: {
     type: DataTypes.INTEGER.UNSIGNED,
@@ -93,11 +102,11 @@ User.init({
   },
   Email: {
     type: DataTypes.STRING(255),
-    allowNull: false,  // Email cannot be null
+    allowNull: false,
   },
   Password: {
     type: DataTypes.STRING(255),
-    allowNull: false,  // Password cannot be null
+    allowNull: false,
   },
   Passkey: {
     type: DataTypes.STRING(255),
@@ -135,6 +144,24 @@ User.init({
     type: DataTypes.INTEGER,
     allowNull: true,
   },
+  // New attributes
+  microsoftEmail: {
+    type: DataTypes.STRING(255),
+    allowNull: true,
+  },
+  oid: {
+    type: DataTypes.STRING(255),
+    allowNull: true,
+  },
+  sub: {
+    type: DataTypes.STRING(255),
+    allowNull: true,
+  },
+  isLinked: {
+    type: DataTypes.BOOLEAN,
+    allowNull: true,
+    defaultValue: false,
+  },
 }, {
   sequelize,
   tableName: 'user',
@@ -142,16 +169,14 @@ User.init({
 
   // Hooks for password hashing
   hooks: {
-    // Before creating a new user, hash the password
     beforeCreate: async (user: User) => {
       if (user.Password) {
-        const salt = await bcrypt.genSalt(10); 
+        const salt = await bcrypt.genSalt(10);
         user.Password = await bcrypt.hash(user.Password, salt);
       }
     },
-    // Before updating the password, check if it's changed and then hash it
     beforeUpdate: async (user: User) => {
-      if (user.changed('Password')) { 
+      if (user.changed('Password')) {
         const salt = await bcrypt.genSalt(10);
         user.Password = await bcrypt.hash(user.Password, salt);
       }
@@ -167,3 +192,6 @@ User.belongsTo(Department, {
 });
 
 export default User;
+
+
+
