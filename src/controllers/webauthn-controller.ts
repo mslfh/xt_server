@@ -11,15 +11,29 @@ import {
 } from '@simplewebauthn/types';
 import Credentials from '../db/models/credentials.js';
 import User from '../db/models/user.js';
+import { v4 as uuidv4 } from 'uuid';
+import bcrypt from 'bcrypt';
 
 const rpName = process.env.RP_NAME!;
 const rpID = process.env.RP_ID!;
-const origin = process.env.ORIGIN!;
+const origin = process.env.FRONTEND_ORIGIN!;
 const timeout = parseInt(process.env.TIMEOUT_MS!, 10);
 
 // Define the base64ToBase64URL function to convert Base64 to Base64URL format
 function base64ToBase64URL(base64: string): string {
     return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+
+function hexToUint8Array(hex: string): Uint8Array {
+    if (hex.length % 2 !== 0) {
+        throw new Error('Hex string must have an even number of characters');
+    }
+
+    const array = new Uint8Array(hex.length / 2);
+    for (let i = 0; i < hex.length; i += 2) {
+        array[i / 2] = parseInt(hex.substr(i, 2), 16);
+    }
+    return array;
 }
 
 // Registration Options API
@@ -28,12 +42,12 @@ export const registrationOptions = async (req: Request, res: Response) => {
     const { username } = req.body;
 
     if (!username) {
-        return res.status(400).json({ error: 'Username is required' });
+        return res.status(400).json({ error: 'Username is required.' });
     }
 
     const user = await User.findOne({ where: { Username: username } });
     if (!user) {
-        return res.status(404).json({ error: 'User not found' });
+        return res.status(404).json({ error: 'User not found.' });
     }
 
     const userID = new TextEncoder().encode(user.ID);
@@ -70,19 +84,19 @@ export const verifyRegistration = async (req: Request, res: Response) => {
 
     // Check for required fields in the request body
     if (!username || !attestationResponse) {
-        return res.status(400).json({ error: 'Username and attestationResponse are required' });
+        return res.status(400).json({ error: 'Username and attestationResponse are required.' });
     }
 
     const user = await User.findOne({ where: { Username: username } });
     if (!user) {
-        return res.status(404).json({ error: 'User not found' });
+        return res.status(404).json({ error: 'User not found.' });
     }
 
     try {
         const storedChallenge = req.session.challenge;
 
         if (!storedChallenge) {
-            return res.status(400).json({ error: 'Challenge not found in session' });
+            return res.status(400).json({ error: 'Challenge not found in session.' });
         }
 
         // Convert id and rawId to Base64URL format
@@ -98,18 +112,25 @@ export const verifyRegistration = async (req: Request, res: Response) => {
 
         if (verification.verified) {
             const { credentialPublicKey, credentialID, counter } = verification.registrationInfo!;
+            const credentialPublicKeyBuffer = Buffer.from(credentialPublicKey);
+            console.log('Credential Public Key:', credentialPublicKey);
+            console.log('Credential Public Key Buffer:', credentialPublicKeyBuffer);
 
             await Credentials.create({
                 ID: credentialID,
                 UserID: user.ID,
-                PublicKey: credentialPublicKey,
+                PublicKey: credentialPublicKeyBuffer,
                 WebAuthnUserID: credentialID,
                 Counter: counter,
             });
 
+            // Update the Passkey field in the User table
+            user.Passkey = credentialID;
+            await user.save();
+
             req.session.challenge = null; // Clear the challenge from the session
 
-            return res.json({ status: 'ok' });
+            return res.status(200).json({ status: 'ok', message: 'Registration with passkey successful!' });
         } else {
             return res.status(400).json({ status: 'failed' });
         }
@@ -121,15 +142,15 @@ export const verifyRegistration = async (req: Request, res: Response) => {
 
 // Authentication Options API
 export const authenticationOptions = async (req: Request, res: Response) => {
-    const { username } = req.body;
+    const { email } = req.body;
 
-    if (!username) {
-        return res.status(400).json({ error: 'Username is required' });
+    if (!email) {
+        return res.status(400).json({ error: 'Email is required.' });
     }
 
-    const user = await User.findOne({ where: { Username: username } });
+    const user = await User.findOne({ where: { Email: email } });
     if (!user) {
-        return res.status(404).json({ error: 'User not found' });
+        return res.status(404).json({ error: 'User not found.' });
     }
 
     const credentials = await Credentials.findAll({ where: { UserID: user.ID } });
@@ -152,15 +173,17 @@ export const authenticationOptions = async (req: Request, res: Response) => {
 
 // Verify Authentication API
 export const verifyAuthentication = async (req: Request, res: Response) => {
-    const { username, authenticationResponse } = req.body;
+    console.log('Verify Authentication Route Hit');
+    console.log(req.body);
+    const { email, authenticationResponse } = req.body;
 
-    if (!username || !authenticationResponse) {
-        return res.status(400).json({ error: 'Username and authenticationResponse are required' });
+    if (!email || !authenticationResponse) {
+        return res.status(400).json({ error: 'Email and authenticationResponse are required.' });
     }
 
-    const user = await User.findOne({ where: { Username: username } });
+    const user = await User.findOne({ where: { Email: email } });
     if (!user) {
-        return res.status(404).json({ error: 'User not found' });
+        return res.status(404).json({ error: 'User not found.' });
     }
 
     try {
@@ -169,14 +192,21 @@ export const verifyAuthentication = async (req: Request, res: Response) => {
         });
 
         if (!credential) {
-            return res.status(404).json({ error: 'Credential not found' });
+            return res.status(404).json({ error: 'Credential not found.' });
         }
 
         const storedChallenge = req.session.challenge;
 
         if (!storedChallenge) {
-            return res.status(400).json({ error: 'Challenge not found in session' });
+            return res.status(400).json({ error: 'Challenge not found in session.' });
         }
+
+        console.log('Credential Public Key from database:', credential.PublicKey);
+
+        const credentialPublicKey = new Uint8Array(credential.PublicKey);
+
+        // Log the credential public key to debug the issue
+        console.log('Credential Public Key:', credentialPublicKey);
 
         const verification = await verifyAuthenticationResponse({
             response: authenticationResponse,
@@ -184,9 +214,9 @@ export const verifyAuthentication = async (req: Request, res: Response) => {
             expectedOrigin: origin,
             expectedRPID: rpID,
             authenticator: {
-                credentialPublicKey: credential.PublicKey,
+                credentialPublicKey: credentialPublicKey,
                 counter: credential.Counter,
-                credentialID: credential.ID, // Ensure this is present
+                credentialID: credential.ID,
             },
         });
 
@@ -196,12 +226,81 @@ export const verifyAuthentication = async (req: Request, res: Response) => {
 
             req.session.challenge = null; // Clear the challenge from the session
 
-            return res.json({ status: 'ok', username: user.Username });
+            return res.status(200).json({ status: 'ok', message: 'Verification with passkey successful!' });
         } else {
             return res.status(400).json({ status: 'failed' });
         }
     } catch (error) {
         console.error(error);
         return res.status(500).send('Verification failed');
+    }
+};
+
+export const checkEmailAndPassword = async (req: Request, res: Response) => {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        return res.status(400).json({ error: 'Email and password are required.' });
+    }
+
+    try {
+        // Find user by email
+        const user = await User.findOne({ where: { Email: email } });
+        if (!user) {
+            return res.status(404).json({ error: 'User not found.' });
+        }
+
+        // Validate the password
+        const isPasswordValid = await bcrypt.compare(password, user.Password);
+        if (!isPasswordValid) {
+            return res.status(401).json({ error: 'Invalid email or password.' });
+        }
+
+        // Return success response if email and password match
+        return res.status(200).json({ status: 'ok', message: 'Email and password are correct.' });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+// New Registration API
+export const newRegistration = async (req: Request, res: Response) => {
+    console.log('New Registration Route Hit');
+
+    const { username, email, password } = req.body;
+
+    // Check for required fields in the request body
+    if (!username || !email || !password) {
+        return res.status(400).json({ status: 'error', message: 'Username, email, and password are required.' });
+    }
+
+    try {
+        // Check if the username already exists
+        const existingUserByUsername = await User.findOne({ where: { Username: username } });
+        if (existingUserByUsername) {
+            return res.status(400).json({ status: 'error', message: 'Registration failed. Username already exists.' });
+        }
+
+        // Check if the email already exists
+        const existingUserByEmail = await User.findOne({ where: { Email: email } });
+        if (existingUserByEmail) {
+            return res.status(400).json({ status: 'error', message: 'Registration failed. Email already exists.' });
+        }
+
+        const userId = uuidv4();
+
+        // Create a new user
+        await User.create({
+            ID: userId,
+            Username: username,
+            Email: email,
+            Password: password,
+        });
+
+        return res.status(200).json({ status: 'ok', message: 'Registration successful!' });
+    } catch (error) {
+        console.error('Error during registration:', error);
+        return res.status(500).json({ status: 'error', message: 'Internal server error' });
     }
 };
