@@ -1,7 +1,8 @@
 import { BaseAuthProvider, LoginHandlerOptions } from 'adminjs';
 import bcrypt from 'bcryptjs';
 import { DEFAULT_ADMIN } from './constants.js';
-import User from '../db/models/user.js';  
+import User from '../db/models/user.js';
+import UserMicrosoftAccount from '../db/models/microsoftAccount.js';  // Import the new model
 
 class CustomAuthProvider extends BaseAuthProvider {
 
@@ -31,13 +32,20 @@ class CustomAuthProvider extends BaseAuthProvider {
     if (microsoftEmail && oid && sub) {
       try {
         console.log('Microsoft login attempt, checking database...');
-        const user = await User.findOne({ where: { microsoftEmail, oid, sub } });
-        if (!user || !user.isLinked) {
+        // Query the new microsoftAccount table
+        const microsoftAccount = await UserMicrosoftAccount.findOne({
+          where: { microsoftEmail, oid, sub },
+          include: [{ model: User }] // Include associated user info
+        });
+
+        if (!microsoftAccount || !microsoftAccount.isLinked) {
           console.log('No linked Microsoft account found');
           return null;  // Return null if no matching Microsoft account
         }
-        console.log(`Microsoft User found: ${user.microsoftEmail}, login successful`);
-        return { email: user.microsoftEmail, role: 'user' };  // Microsoft login successful
+
+        const user = microsoftAccount.User;
+        console.log(`Microsoft User found: ${user.Email}, login successful`);
+        return { email: user.Email, role: 'user' };  // Microsoft login successful
       } catch (error) {
         console.error('Error during Microsoft login:', error);
         return null;

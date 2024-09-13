@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import sequelize from '../config.js';
 import Department from './department.js';
 
-// Define the attributes for the User model, including the new attributes
+// Define the attributes for the User model
 interface UserAttributes {
   ID: string;
   GivenNames?: string;
@@ -24,11 +24,6 @@ interface UserAttributes {
   ExitEnabled?: boolean;
   IsNew?: boolean;
   CalorieGoal?: number;
-  // New attributes
-  microsoftEmail?: string;
-  oid?: string;
-  sub?: string;
-  isLinked?: boolean;
 }
 
 // Define the type for creating new User instances
@@ -55,10 +50,6 @@ class User extends Model<UserAttributes, UserCreationAttributes> implements User
   public ExitEnabled?: boolean;
   public IsNew?: boolean;
   public CalorieGoal?: number;
-  public microsoftEmail?: string;
-  public oid?: string;
-  public sub?: string;
-  public isLinked?: boolean;
 
   // Method to compare the given plain password with the hashed password
   public async validatePassword(plainPassword: string): Promise<boolean> {
@@ -115,7 +106,7 @@ User.init({
     allowNull: false,
   },
   Passkey: {
-    type: DataTypes.STRING(255), // Stores credentialID for WebAuthn
+    type: DataTypes.STRING(255),
     allowNull: true,
     defaultValue: '',
   },
@@ -159,24 +150,6 @@ User.init({
     allowNull: true,
     defaultValue: 2000,
   },
-  // New attributes
-  microsoftEmail: {
-    type: DataTypes.STRING(255),
-    allowNull: true,
-  },
-  oid: {
-    type: DataTypes.STRING(255),
-    allowNull: true,
-  },
-  sub: {
-    type: DataTypes.STRING(255),
-    allowNull: true,
-  },
-  isLinked: {
-    type: DataTypes.BOOLEAN,
-    allowNull: true,
-    defaultValue: false,
-  },
 }, {
   sequelize,
   tableName: 'user',
@@ -207,6 +180,3 @@ User.belongsTo(Department, {
 });
 
 export default User;
-
-
-

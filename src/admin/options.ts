@@ -21,6 +21,7 @@ import ExercisePlan from '../db/models/exercisePlan.js';
 import UserExerciseLog from '../db/models/userExerciseLog.js';
 import UserFavourite from '../db/models/userFavorite.js';
 import UserSetting from '../db/models/userSettings.js';
+import UserMicrosoftAccount from '../db/models/microsoftAccount.js';
 
 
 const options: AdminJSOptions = {
@@ -405,6 +406,29 @@ const options: AdminJSOptions = {
         actions: {
           new: {
             before: async (request) => {
+              return request;
+            },
+          },
+        },
+      },
+    },
+    {
+      resource: UserMicrosoftAccount,
+      options: {
+        properties: {
+          ID: { isVisible: { list: true, filter: true, show: true, edit: false } },
+          UserID: { reference: 'user', isVisible: true },
+          microsoftEmail: { isVisible: { list: true, filter: true, show: true, edit: true } },
+          oid: { isVisible: { list: true, filter: true, show: true, edit: true } },
+          sub: { isVisible: { list: true, filter: true, show: true, edit: true } },
+          isLinked: { isVisible: { list: true, filter: true, show: true, edit: true } },
+        },
+        actions: {
+          new: {
+            before: async (request) => {
+              if (request.payload) {
+                delete request.payload.ID;
+              }
               return request;
             },
           },
