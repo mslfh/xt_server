@@ -2,22 +2,26 @@ FROM node:20
 
 WORKDIR /admin
 
-#ENV NODE_ENV="production"
+# Set timezone
 ENV TZ="UTC"
 
-COPY package.json ./
-#COPY yarn.lock ./
+# Copy package.json and package-lock.json
+COPY package.json package-lock.json ./
 
-#RUN yarn install --frozen-lockfile --production
-RUN yarn install
+# Install dependencies using npm
+RUN npm install
+
+# Install Typescript globally
+RUN npm i -g typescript
+
+# Copy the rest of the application
 COPY . .
 
-RUN npm i -g typescript
-RUN yarn build
-#RUN npx prisma generate
-#RUN rm -rf src
+# Build the project using npm
+RUN npm run build
 
-#ENV ADMIN_JS_SKIP_BUNDLE="true"
-
+# Expose port 5000
 EXPOSE 5000
-CMD yarn start
+
+# Start the application using npm
+CMD ["npm", "run", "start"]

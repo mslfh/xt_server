@@ -10,8 +10,9 @@ import webauthnRoutes from './routes/webauthn-routes.js';
 import session from 'express-session';
 import sequelize from './db/config.js';
 import SequelizeStore from 'connect-session-sequelize';
-import https from 'https';
-import fs from 'fs';
+import http from 'http';
+// import https from 'https';
+// import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -32,18 +33,21 @@ sessionStore.sync();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+/*
 // Load SSL/TLS certificates
 const sslOptions = {
   key: fs.readFileSync(path.resolve(__dirname, '../localhost-key.pem')),
   cert: fs.readFileSync(path.resolve(__dirname, '../localhost.pem')),
 };
+*/
 
 const start = async () => {
   const app = express();
 
   // Allow cross-source requests
   app.use(cors({
-    origin: ['https://www.exertime.me', 'https://localhost:9000'],
+    origin: ['https://www.exertime.me', 'http://localhost:9000'],
+    //origin: ['https://www.exertime.me', 'https://localhost:9000'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
@@ -79,7 +83,8 @@ const start = async () => {
         store: sessionStore,
         resave: false,
         saveUninitialized: false,
-        cookie: { secure: true }, // Set to true if using HTTPS
+        cookie: { secure: false }, // Set to run on http
+        // cookie: { secure: true }, // Set to true if using HTTPS
       })
     );
 
@@ -111,9 +116,16 @@ const start = async () => {
 
     app.use(admin.options.rootPath, router);
 
+    /*
     // Start the HTTPS server
     https.createServer(sslOptions, app).listen(port, () => {
       console.log(`AdminJS available at https://localhost:${port}${admin.options.rootPath}`);
+    });
+    */
+
+    // Start the HTTP server
+    http.createServer(app).listen(port, () => {
+      console.log(`AdminJS available at http://localhost:${port}${admin.options.rootPath}`);
     });
 
   } catch (error) {

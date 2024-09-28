@@ -6,25 +6,26 @@ services:
     ports:
       - "5000:5000"
     environment:
-      DATABASE_URL: mysql://root:adminjs@localhost:3306/adminjs
+      DATABASE_URL: mysql://root:adminjs@mysql:3306/adminjs # Use mysql as the host for Docker
       DATABASE_DIALECT: mysql
       DATABASE_NAME: adminjs
-      DATABASE_HOST: localhost
+      DATABASE_HOST: mysql # Use the MySQL container name as the host in Docker
       DATABASE_USER: root
       DATABASE_PASSWORD: root
       COOKIE_SECRET: QmutO5X71dgE4p8GiU57YAxMCb6f6vm9
       SESSION_SECRET: 6f8e023b1f1a4b32a915aa7f6725f3d1
-      ORIGIN: https://localhost:5000
+      ORIGIN: http://localhost:5000 # Use http instead of https for internal Docker communication
       RP_NAME: exertime_application
       RP_ID: localhost
       TIMEOUT_MS: 60000
-      COOKIE_MAX_AGE: 86400000 # 1 day in milliseconds
+      COOKIE_MAX_AGE: 86400000
       JWT_SECRET: 9a0b0cc4b03b47c9a1c8c16f7a0569a6
       JWT_EXPIRATION: 1h
-      FRONTEND_ORIGIN: https://localhost:9000
+      FRONTEND_ORIGIN: http://localhost:9000 # Frontend origin updated to HTTP
     depends_on:
       - mysql
-    network_mode: host
+    networks:
+      - app-network
 
   mysql:
     image: mysql:latest
@@ -36,13 +37,20 @@ services:
       - "3306:3306"
     command: mysqld --sql_mode="" --max_connections=1100 --general-log=1 --general-log-file=/tmp/mysql-general-log.log
     healthcheck:
-      test: ["CMD", "sh", "-c", "cat /tmp/mysql-general-log.log | grep 'root@localhost on  using Socket'"]
+      test: [ "CMD", "sh", "-c", "cat /tmp/mysql-general-log.log | grep 'root@localhost on  using Socket'" ]
       interval: 10s
       retries: 120
     volumes:
       - db_data:/var/lib/mysql
       - ./adminjs_backup.sql:/docker-entrypoint-initdb.d/adminjs_backup.sql
       - ./mysql-general-log.log:/tmp/mysql-general-log.log
-    network_mode: host
+    networks:
+      - app-network
+
 volumes:
   db_data:
+
+
+networks:
+  app-network:
+    driver: bridge
