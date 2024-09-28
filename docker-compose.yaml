@@ -1,4 +1,3 @@
-version: '3.8'
 services:
   adminjs:
     build: .
@@ -35,14 +34,22 @@ services:
       MYSQL_DATABASE: adminjs
     ports:
       - "3306:3306"
-    command: mysqld --sql_mode="" --max_connections=1100 --general-log=1 --general-log-file=/tmp/mysql-general-log.log
+    command: >
+      sh -c " if [ ! -d /var/lib/mysql/adminjs ]; then
+        echo 'Database does not exist. Initializing database and running adminjs.sql';
+        mysqld --initialize-insecure;
+        mysqld --daemonize;
+        mysql -u root -e 'CREATE DATABASE IF NOT EXISTS adminjs';
+        mysql -u root adminjs < /docker-entrypoint-initdb.d/adminjs.sql;
+        mysqladmin -u root shutdown;
+      fi; exec mysqld --sql_mode='' --max_connections=1100 --general-log=1 --general-log-file=/tmp/mysql-general-log.log "
     healthcheck:
       test: [ "CMD", "sh", "-c", "cat /tmp/mysql-general-log.log | grep 'root@localhost on  using Socket'" ]
       interval: 10s
       retries: 120
     volumes:
       - db_data:/var/lib/mysql
-      - ./adminjs_backup.sql:/docker-entrypoint-initdb.d/adminjs_backup.sql
+      - ./adminjs.sql:/docker-entrypoint-initdb.d/adminjs.sql # Mount adminjs.sql for table creation
       - ./mysql-general-log.log:/tmp/mysql-general-log.log
     networks:
       - app-network
