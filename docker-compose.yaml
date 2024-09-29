@@ -13,29 +13,29 @@ services:
       DATABASE_PASSWORD: root
       COOKIE_SECRET: QmutO5X71dgE4p8GiU57YAxMCb6f6vm9
       SESSION_SECRET: 6f8e023b1f1a4b32a915aa7f6725f3d1
-      ORIGIN: https://adminjs.localhost:8443
+      ORIGIN: https://localhost:8443
       RP_NAME: exertime_application
-      RP_ID: adminjs.localhost
+      RP_ID: localhost
       TIMEOUT_MS: 60000
       COOKIE_MAX_AGE: 86400000
       JWT_SECRET: 9a0b0cc4b03b47c9a1c8c16f7a0569a6
       JWT_EXPIRATION: 1h
-      FRONTEND_ORIGIN: https://quasar.localhost:8443
+      FRONTEND_ORIGIN: https://localhost:8443
     labels:
       - "traefik.enable=true"
 
       # HTTP Router
-      - "traefik.http.routers.adminjs.rule=Host(`adminjs.localhost`)"
+      - "traefik.http.routers.adminjs.rule=Host(`localhost`)"
       - "traefik.http.services.adminjs.loadbalancer.server.port=5000" # Single service for HTTP
 
       # HTTPS Router (reusing the same service)
-      - "traefik.http.routers.adminjs-secure.rule=Host(`adminjs.localhost`)"
+      - "traefik.http.routers.adminjs-secure.rule=Host(`localhost`)"
       - "traefik.http.routers.adminjs-secure.entrypoints=websecure"
       - "traefik.http.routers.adminjs-secure.tls=true"
       - "traefik.http.services.adminjs.loadbalancer.server.port=5000" # Use the same service for HTTPS
 
       # API Router (also reuse the same service)
-      - "traefik.http.routers.adminjs-api.rule=Host(`adminjs.localhost`) && PathPrefix(`/admin/api/webauthn`)"
+      - "traefik.http.routers.adminjs-api.rule=Host(`localhost`) && PathPrefix(`/admin/api/webauthn`)"
       - "traefik.http.routers.adminjs-api.entrypoints=websecure"
       - "traefik.http.routers.adminjs-api.tls=true"
       - "traefik.http.services.adminjs.loadbalancer.server.port=5000" # Reuse the same service for API requests

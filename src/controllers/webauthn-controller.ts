@@ -39,6 +39,7 @@ function hexToUint8Array(hex: string): Uint8Array {
 // Registration Options API
 export const registrationOptions = async (req: Request, res: Response) => {
     console.log('Registration Options Route Hit');
+    console.log('rpID: ', rpID);
     const { username } = req.body;
 
     if (!username) {
