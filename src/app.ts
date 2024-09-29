@@ -46,7 +46,7 @@ const start = async () => {
 
   // Allow cross-source requests
   app.use(cors({
-    origin: ['https://www.exertime.me', 'http://localhost:9000'],
+    origin: ['https://www.exertime.me', 'https://quasar.localhost:8443'],
     //origin: ['https://www.exertime.me', 'https://localhost:9000'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
@@ -76,17 +76,23 @@ const start = async () => {
       }
     );
 
-    // Configure session middleware
+    app.set('trust proxy', 1);  // Trust the first proxy (Traefik)
+
     app.use(
       session({
         secret: process.env.SESSION_SECRET || 'your_secret_key',
         store: sessionStore,
         resave: false,
         saveUninitialized: false,
-        cookie: { secure: false }, // Set to run on http
-        // cookie: { secure: true }, // Set to true if using HTTPS
+        cookie: {
+          secure: "auto",  // Automatically set `secure` based on request protocol
+          httpOnly: true,  // Keep it true to protect session cookies from client-side JavaScript access
+          sameSite: 'none',  // Enable cross-origin requests
+        },
       })
     );
+
+
 
     // Adding a middleware to log all requests
     app.use((req, res, next) => {
@@ -99,14 +105,19 @@ const start = async () => {
 
       // Check for valid JSON content type
       if (req.method === 'POST' && req.headers['content-type'] !== 'application/json') {
+        console.error(`Invalid content type: ${req.headers['content-type']} for ${req.url}`);
         return res.status(415).json({ error: 'Unsupported Media Type' });
       }
 
+      /*
       // Check for authentication cookie
       const cookie = req.headers.cookie;
+      console.log(`Cookie: ${cookie}`);
       if (!cookie || !cookie.includes('connect.sid=')) {
+        console.error(`Missing or invalid authentication cookie in request: ${req.method} ${req.url}`);
         return res.status(403).json({ error: 'Authentication required' });
       }
+        */
       next();
     });
 

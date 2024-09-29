@@ -3,24 +3,44 @@ services:
     build: .
     container_name: adminjs-container
     ports:
-      - "5000:5000"
+      - "5000:5000" # Backend port
     environment:
-      DATABASE_URL: mysql://root:adminjs@mysql:3306/adminjs # Use mysql as the host for Docker
+      DATABASE_URL: mysql://root:adminjs@mysql:3306/adminjs
       DATABASE_DIALECT: mysql
       DATABASE_NAME: adminjs
-      DATABASE_HOST: mysql # Use the MySQL container name as the host in Docker
+      DATABASE_HOST: mysql
       DATABASE_USER: root
       DATABASE_PASSWORD: root
       COOKIE_SECRET: QmutO5X71dgE4p8GiU57YAxMCb6f6vm9
       SESSION_SECRET: 6f8e023b1f1a4b32a915aa7f6725f3d1
-      ORIGIN: http://localhost:5000 # Use http instead of https for internal Docker communication
+      ORIGIN: https://adminjs.localhost:8443
       RP_NAME: exertime_application
-      RP_ID: localhost
+      RP_ID: adminjs.localhost
       TIMEOUT_MS: 60000
       COOKIE_MAX_AGE: 86400000
       JWT_SECRET: 9a0b0cc4b03b47c9a1c8c16f7a0569a6
       JWT_EXPIRATION: 1h
-      FRONTEND_ORIGIN: http://localhost:9000 # Frontend origin updated to HTTP
+      FRONTEND_ORIGIN: https://quasar.localhost:8443
+    labels:
+      - "traefik.enable=true"
+
+      # HTTP Router
+      - "traefik.http.routers.adminjs.rule=Host(`adminjs.localhost`)"
+      - "traefik.http.services.adminjs.loadbalancer.server.port=5000" # Single service for HTTP
+
+      # HTTPS Router (reusing the same service)
+      - "traefik.http.routers.adminjs-secure.rule=Host(`adminjs.localhost`)"
+      - "traefik.http.routers.adminjs-secure.entrypoints=websecure"
+      - "traefik.http.routers.adminjs-secure.tls=true"
+      - "traefik.http.services.adminjs.loadbalancer.server.port=5000" # Use the same service for HTTPS
+
+      # API Router (also reuse the same service)
+      - "traefik.http.routers.adminjs-api.rule=Host(`adminjs.localhost`) && PathPrefix(`/admin/api/webauthn`)"
+      - "traefik.http.routers.adminjs-api.entrypoints=websecure"
+      - "traefik.http.routers.adminjs-api.tls=true"
+      - "traefik.http.services.adminjs.loadbalancer.server.port=5000" # Reuse the same service for API requests
+
+      - "traefik.http.middlewares.adminjs-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
     depends_on:
       - mysql
     networks:
@@ -49,7 +69,7 @@ services:
       retries: 120
     volumes:
       - db_data:/var/lib/mysql
-      - ./adminjs.sql:/docker-entrypoint-initdb.d/adminjs.sql # Mount adminjs.sql for table creation
+      - ./adminjs.sql:/docker-entrypoint-initdb.d/adminjs.sql
       - ./mysql-general-log.log:/tmp/mysql-general-log.log
     networks:
       - app-network
@@ -60,4 +80,4 @@ volumes:
 
 networks:
   app-network:
-    driver: bridge
+    external: true
