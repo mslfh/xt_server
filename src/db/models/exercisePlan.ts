@@ -12,9 +12,17 @@ ExercisePlan.init({
     primaryKey: true,
     allowNull: false,
   },
-  Title: {
-    type: DataTypes.TEXT,
+  Subject: {
+    type: DataTypes.STRING(255),
     allowNull: false,
+  },
+  ContentType: {
+    type: DataTypes.STRING(255),
+    allowNull: true,
+  },
+  Content: {
+    type: DataTypes.STRING(255),
+    allowNull: true,
   },
   OrganisationID: {
     type: DataTypes.INTEGER,
@@ -25,46 +33,62 @@ ExercisePlan.init({
     allowNull: true,
   },
   Status: {
-    type: DataTypes.TEXT,
-    allowNull: true,
-  },
-  Description: {
-    type: DataTypes.TEXT,
+    type: DataTypes.STRING(32),
     allowNull: true,
   },
   Type: {
-    type: DataTypes.STRING('10'),
+    type: DataTypes.STRING(32),
     allowNull: true,
   },
   Frequency: {
-    type: DataTypes.STRING('48'),
+    type: DataTypes.STRING(48),
     allowNull: true,
   },
   CustomFrequency: {
-    type: DataTypes.TEXT,
+    type: DataTypes.STRING(255),
     allowNull: true,
   },
-  StartDate: {
-    type: DataTypes.DATE,
+  IsAllDay: {
+    type: DataTypes.TINYINT,
     allowNull: true,
   },
-  EndDate: {
-    type: DataTypes.DATE,
-    allowNull: true,
-  },
-  Level: {
+  Intervals: {
     type: DataTypes.INTEGER,
+    allowNull: true,
+  },
+  StartTimeZone: {
+    type: DataTypes.STRING(32),
+    allowNull: true,
+  },
+  StartDateTime: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
+  EndTimeZone: {
+    type: DataTypes.STRING(32),
+    allowNull: true,
+  },
+  EndDateTime: {
+    type: DataTypes.DATE,
     allowNull: true,
   },
   Priority: {
     type: DataTypes.INTEGER,
     allowNull: true,
   },
+  Attendees: {
+    type: DataTypes.STRING(255),
+    allowNull: true,
+  },
+  Remark: {
+    type: DataTypes.STRING(255),
+    allowNull: true,
+  },
   CreatedAt: {
     type: DataTypes.DATE,
     allowNull: true,
+    defaultValue: DataTypes.NOW,
   },
-
 }, {
   sequelize,
   modelName: 'ExercisePlan',
@@ -83,6 +107,5 @@ ExercisePlan.belongsTo(Department, {
   onDelete: 'CASCADE',
   onUpdate: 'CASCADE',
 });
-
 
 export default ExercisePlan;

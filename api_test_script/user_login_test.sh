@@ -1,1 +1,1 @@
-curl -X POST http://localhost:5000/admin/login   -H "Content-Type: application/x-www-form-urlencoded"   -d "email=test1@example.com&password=hello123"   -c cookies.txt
+curl -X POST https://localhost:5000/admin/login -H "Content-Type: application/x-www-form-urlencoded" -d 'email=admin@example.com&password=password' -c cookies.txt -k
