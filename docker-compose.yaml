@@ -42,9 +42,13 @@ services:
 
       - "traefik.http.middlewares.adminjs-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
     networks:
       - app-network
+    volumes:
+      - ./wait-for-mysql.sh:/wait-for-mysql.sh
+    entrypoint: [ "sh", "/wait-for-mysql.sh" ]
 
   mysql:
     image: mysql:latest
@@ -54,22 +58,15 @@ services:
       MYSQL_DATABASE: adminjs
     ports:
       - "3306:3306"
-    command: >
-      sh -c " if [ ! -d /var/lib/mysql/adminjs ]; then
-        echo 'Database does not exist. Initializing database and running adminjs.sql';
-        mysqld --initialize-insecure;
-        mysqld --daemonize;
-        mysql -u root -e 'CREATE DATABASE IF NOT EXISTS adminjs';
-        mysql -u root adminjs < /docker-entrypoint-initdb.d/adminjs.sql;
-        mysqladmin -u root shutdown;
-      fi; exec mysqld --sql_mode='' --max_connections=1100 --general-log=1 --general-log-file=/tmp/mysql-general-log.log "
+    command: [ "sh", "/docker-entrypoint-initdb.d/mysql-init.sh" ]
     healthcheck:
-      test: [ "CMD", "sh", "-c", "cat /tmp/mysql-general-log.log | grep 'root@localhost on  using Socket'" ]
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
       interval: 10s
-      retries: 120
+      retries: 5
     volumes:
       - db_data:/var/lib/mysql
       - ./adminjs.sql:/docker-entrypoint-initdb.d/adminjs.sql
+      - ./mysql-init.sh:/docker-entrypoint-initdb.d/mysql-init.sh
       - ./mysql-general-log.log:/tmp/mysql-general-log.log
     networks:
       - app-network

@@ -5,6 +5,9 @@ WORKDIR /admin
 # Set timezone
 ENV TZ="UTC"
 
+# Install netcat-openbsd
+RUN apt-get update && apt-get install -y netcat-openbsd
+
 # Copy package.json and package-lock.json
 COPY package.json package-lock.json ./
 

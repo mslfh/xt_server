@@ -46,7 +46,7 @@ const start = async () => {
 
   // Allow cross-source requests
   app.use(cors({
-    origin: ['https://www.exertime.me', 'https://quasar.localhost:8443'],
+    origin: ['https://www.exertime.me', 'https://localhost:8443'],
     //origin: ['https://www.exertime.me', 'https://localhost:9000'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
@@ -76,19 +76,14 @@ const start = async () => {
       }
     );
 
-    app.set('trust proxy', 1);  // Trust the first proxy (Traefik)
-
+    // Configure session middleware
     app.use(
       session({
         secret: process.env.SESSION_SECRET || 'your_secret_key',
         store: sessionStore,
         resave: false,
         saveUninitialized: false,
-        cookie: {
-          secure: "auto",  // Automatically set `secure` based on request protocol
-          httpOnly: true,  // Keep it true to protect session cookies from client-side JavaScript access
-          sameSite: 'none',  // Enable cross-origin requests
-        },
+        cookie: { secure: false }, // Set to run on http
       })
     );
 
