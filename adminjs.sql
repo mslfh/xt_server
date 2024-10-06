@@ -11,7 +11,7 @@
  Target Server Version : 80039
  File Encoding         : 65001
 
- Date: 11/09/2024 18:30:36
+ Date: 26/09/2024 13:23:59
 */
 
 SET NAMES utf8mb4;
@@ -85,7 +85,7 @@ CREATE TABLE `exercise`  (
   `ID` int UNSIGNED NOT NULL AUTO_INCREMENT,
   `Caption` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `Status` enum('A','I','D') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `Type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `Type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT 'repetition / duration',
   `CategoryID` int NULL DEFAULT NULL,
   `Image` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
   `VideoURL` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
@@ -230,18 +230,24 @@ CREATE TABLE `exercise_log_question`  (
 DROP TABLE IF EXISTS `exercise_plan`;
 CREATE TABLE `exercise_plan`  (
   `ID` int UNSIGNED NOT NULL AUTO_INCREMENT,
-  `Title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `Subject` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `ContentType` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `Content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   `OrganisationID` int NULL DEFAULT NULL,
   `DepartmentID` int NULL DEFAULT NULL COMMENT 'optional',
-  `Status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
-  `Description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
-  `Type` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `Status` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT 'active/inactive',
+  `Type` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   `Frequency` varchar(48) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT 'Day, WorkingDay, Weekend, Custom',
-  `CustomFrequency` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
-  `StartDate` datetime NULL DEFAULT NULL,
-  `EndDate` datetime NULL DEFAULT NULL,
-  `Level` int NULL DEFAULT NULL,
-  `Priority` int NULL DEFAULT NULL,
+  `CustomFrequency` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT 'Mon,Tues,......',
+  `IsAllDay` tinyint NULL DEFAULT NULL COMMENT '1-yes 0-no',
+  `Intervals` int NULL DEFAULT NULL COMMENT 'minutes of interval between workout sessions',
+  `StartTimeZone` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `StartDateTime` datetime NULL DEFAULT NULL,
+  `EndTimeZone` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `EndDateTime` datetime NULL DEFAULT NULL,
+  `Priority` int NULL DEFAULT NULL COMMENT '0-highest',
+  `Attendees` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT 'emailAddress for Attendees',
+  `Remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   `CreatedAt` datetime NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`ID`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
@@ -249,7 +255,7 @@ CREATE TABLE `exercise_plan`  (
 -- ----------------------------
 -- Records of exercise_plan
 -- ----------------------------
-INSERT INTO `exercise_plan` VALUES (1, 'DefaultPlan', 1, NULL, 'active', NULL, 'default', 'Day', NULL, '2024-08-14 21:37:15', '2025-01-01 21:37:24', 1, 1, '2024-08-13 21:37:37');
+INSERT INTO `exercise_plan` VALUES (1, 'DefaultPlan', NULL, NULL, 1, NULL, 'active', 'default', 'Day', NULL, NULL, NULL, NULL, '2024-08-14 21:37:15', NULL, '2025-01-01 21:37:24', 1, NULL, NULL, '2024-08-13 21:37:37');
 
 -- ----------------------------
 -- Table structure for helpful_hint
@@ -270,6 +276,26 @@ CREATE TABLE `helpful_hint`  (
 -- ----------------------------
 INSERT INTO `helpful_hint` VALUES (1, 'edasdas', 122, 2);
 INSERT INTO `helpful_hint` VALUES (2, 'hello', 0, 2);
+
+-- ----------------------------
+-- Table structure for microsoft_account
+-- ----------------------------
+DROP TABLE IF EXISTS `microsoft_account`;
+CREATE TABLE `microsoft_account`  (
+  `ID` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `UserID` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `microsoftEmail` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `oid` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `sub` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `isLinked` tinyint(1) NULL DEFAULT 0,
+  PRIMARY KEY (`ID`) USING BTREE,
+  INDEX `UserID`(`UserID` ASC) USING BTREE,
+  CONSTRAINT `microsoft_account_ibfk_1` FOREIGN KEY (`UserID`) REFERENCES `user` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of microsoft_account
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for organisation
@@ -329,7 +355,7 @@ CREATE TABLE `sessions`  (
 -- ----------------------------
 -- Records of sessions
 -- ----------------------------
-INSERT INTO `sessions` VALUES ('ChARoIx1ol2d0YJIh07qrhJOs0VzCKJ6', '2024-09-12 08:27:06', '{\"cookie\":{\"originalMaxAge\":null,\"expires\":null,\"secure\":true,\"httpOnly\":true,\"path\":\"/\"},\"adminUser\":{\"email\":\"admin@example.com\",\"role\":\"admin\"},\"challenge\":null}', '2024-09-11 07:07:26', '2024-09-11 08:27:06');
+INSERT INTO `sessions` VALUES ('ChARoIx1ol2d0YJIh07qrhJOs0VzCKJ6', '2024-09-18 06:10:19', '{\"cookie\":{\"originalMaxAge\":null,\"expires\":null,\"secure\":true,\"httpOnly\":true,\"path\":\"/\"},\"adminUser\":{\"email\":\"admin@example.com\",\"role\":\"admin\"},\"challenge\":null}', '2024-09-11 07:07:26', '2024-09-17 06:10:19');
 
 -- ----------------------------
 -- Table structure for survey_response
@@ -384,7 +410,7 @@ CREATE TABLE `user`  (
   PRIMARY KEY (`ID`) USING BTREE,
   INDEX `DepartmentID`(`DepartmentID` ASC) USING BTREE,
   CONSTRAINT `User_ibfk_1` FOREIGN KEY (`DepartmentID`) REFERENCES `department` (`ID`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 29 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of user
@@ -402,7 +428,7 @@ CREATE TABLE `user_event`  (
   `EventType` int NULL DEFAULT NULL,
   PRIMARY KEY (`ID`) USING BTREE,
   INDEX `UserID`(`UserID` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of user_event
@@ -421,7 +447,7 @@ CREATE TABLE `user_exercise_log`  (
   `Duration` double NULL DEFAULT NULL,
   `CreatedAt` datetime NULL DEFAULT NULL,
   PRIMARY KEY (`ID`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of user_exercise_log
@@ -438,7 +464,7 @@ CREATE TABLE `user_favorite`  (
   `CreatedAt` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`ID`) USING BTREE,
   INDEX `ExerciseID`(`ExerciseID` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of user_favorite
@@ -455,7 +481,7 @@ CREATE TABLE `user_position`  (
   `Position` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   PRIMARY KEY (`ID`) USING BTREE,
   INDEX `UserID`(`UserID` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of user_position
@@ -471,7 +497,7 @@ CREATE TABLE `user_setting`  (
   `Content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   `Value` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   PRIMARY KEY (`ID`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = 'For store user setting like allow notification etc.' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = 'For store user setting like allow notification etc.' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of user_setting
@@ -488,7 +514,7 @@ CREATE TABLE `user_weight`  (
   `Weight` int NULL DEFAULT NULL,
   PRIMARY KEY (`ID`) USING BTREE,
   INDEX `UserID`(`UserID` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of user_weight

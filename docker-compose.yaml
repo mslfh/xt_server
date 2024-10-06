@@ -1,30 +1,54 @@
-version: '3.8'
 services:
   adminjs:
     build: .
     container_name: adminjs-container
     ports:
-      - "5000:5000"
+      - "5000:5000" # Backend port
     environment:
-      DATABASE_URL: mysql://root:adminjs@localhost:3306/adminjs
+      DATABASE_URL: mysql://root:adminjs@mysql:3306/adminjs
       DATABASE_DIALECT: mysql
       DATABASE_NAME: adminjs
-      DATABASE_HOST: localhost
+      DATABASE_HOST: mysql
       DATABASE_USER: root
       DATABASE_PASSWORD: root
       COOKIE_SECRET: QmutO5X71dgE4p8GiU57YAxMCb6f6vm9
       SESSION_SECRET: 6f8e023b1f1a4b32a915aa7f6725f3d1
-      ORIGIN: https://localhost:5000
+      ORIGIN: https://localhost:8443
       RP_NAME: exertime_application
       RP_ID: localhost
       TIMEOUT_MS: 60000
-      COOKIE_MAX_AGE: 86400000 # 1 day in milliseconds
+      COOKIE_MAX_AGE: 86400000
       JWT_SECRET: 9a0b0cc4b03b47c9a1c8c16f7a0569a6
       JWT_EXPIRATION: 1h
-      FRONTEND_ORIGIN: https://localhost:9000
+      FRONTEND_ORIGIN: https://localhost:8443
+    labels:
+      - "traefik.enable=true"
+
+      # HTTP Router
+      - "traefik.http.routers.adminjs.rule=Host(`localhost`)"
+      - "traefik.http.services.adminjs.loadbalancer.server.port=5000" # Single service for HTTP
+
+      # HTTPS Router (reusing the same service)
+      - "traefik.http.routers.adminjs-secure.rule=Host(`localhost`)"
+      - "traefik.http.routers.adminjs-secure.entrypoints=websecure"
+      - "traefik.http.routers.adminjs-secure.tls=true"
+      - "traefik.http.services.adminjs.loadbalancer.server.port=5000" # Use the same service for HTTPS
+
+      # API Router (also reuse the same service)
+      - "traefik.http.routers.adminjs-api.rule=Host(`localhost`) && PathPrefix(`/admin/api/webauthn`)"
+      - "traefik.http.routers.adminjs-api.entrypoints=websecure"
+      - "traefik.http.routers.adminjs-api.tls=true"
+      - "traefik.http.services.adminjs.loadbalancer.server.port=5000" # Reuse the same service for API requests
+
+      - "traefik.http.middlewares.adminjs-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
     depends_on:
-      - mysql
-    network_mode: host
+      mysql:
+        condition: service_healthy
+    networks:
+      - app-network
+    volumes:
+      - ./wait-for-mysql.sh:/wait-for-mysql.sh
+    entrypoint: [ "sh", "/wait-for-mysql.sh" ]
 
   mysql:
     image: mysql:latest
@@ -34,15 +58,23 @@ services:
       MYSQL_DATABASE: adminjs
     ports:
       - "3306:3306"
-    command: mysqld --sql_mode="" --max_connections=1100 --general-log=1 --general-log-file=/tmp/mysql-general-log.log
+    command: [ "sh", "/docker-entrypoint-initdb.d/mysql-init.sh" ]
     healthcheck:
-      test: ["CMD", "sh", "-c", "cat /tmp/mysql-general-log.log | grep 'root@localhost on  using Socket'"]
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
       interval: 10s
-      retries: 120
+      retries: 5
     volumes:
       - db_data:/var/lib/mysql
-      - ./adminjs_backup.sql:/docker-entrypoint-initdb.d/adminjs_backup.sql
+      - ./adminjs.sql:/docker-entrypoint-initdb.d/adminjs.sql
+      - ./mysql-init.sh:/docker-entrypoint-initdb.d/mysql-init.sh
       - ./mysql-general-log.log:/tmp/mysql-general-log.log
-    network_mode: host
+    networks:
+      - app-network
+
 volumes:
   db_data:
+
+
+networks:
+  app-network:
+    external: true
