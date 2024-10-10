@@ -196,9 +196,9 @@ const options: AdminJSOptions = {
       options: {
         properties: {
           ID: { isVisible: { list: true, filter: true, show: true, edit: false } },
-          UserId: { reference: 'user', isVisible: true },
+          UserID: { reference: 'user', isVisible: true },
           WebAuthnUserID: { isVisible: true },
-          PublicKey: { isVisible: { list: false, filter: false, show: false, edit: false } },
+          PublicKey: { isVisible: { list: false, filter: false, show: false, edit: true } },
           Counter: { isVisible: true },
           DeviceType: { isVisible: true },
           BackedUp: { isVisible: true },
