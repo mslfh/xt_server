@@ -11,8 +11,6 @@ import session from 'express-session';
 import sequelize from './db/config.js';
 import SequelizeStore from 'connect-session-sequelize';
 import http from 'http';
-// import https from 'https';
-// import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -33,26 +31,16 @@ sessionStore.sync();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-/*
-// Load SSL/TLS certificates
-const sslOptions = {
-  key: fs.readFileSync(path.resolve(__dirname, '../localhost-key.pem')),
-  cert: fs.readFileSync(path.resolve(__dirname, '../localhost.pem')),
-};
-*/
-
 const start = async () => {
   const app = express();
 
   // Allow cross-source requests
   app.use(cors({
     origin: ['https://www.exertime.me', 'https://localhost:8443'],
-    //origin: ['https://www.exertime.me', 'https://localhost:9000'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
   }));
-
 
   try {
     await initializeDb();
@@ -87,8 +75,6 @@ const start = async () => {
       })
     );
 
-
-
     // Adding a middleware to log all requests
     app.use((req, res, next) => {
       console.log(`Received request: ${req.method} ${req.url}`);
@@ -97,37 +83,50 @@ const start = async () => {
 
     // Middleware to check content type and authentication cookie
     app.use('/admin/api/webauthn', (req, res, next) => {
-
-      // Check for valid JSON content type
       if (req.method === 'POST' && req.headers['content-type'] !== 'application/json') {
         console.error(`Invalid content type: ${req.headers['content-type']} for ${req.url}`);
         return res.status(415).json({ error: 'Unsupported Media Type' });
       }
-
-      /*
-      // Check for authentication cookie
-      const cookie = req.headers.cookie;
-      console.log(`Cookie: ${cookie}`);
-      if (!cookie || !cookie.includes('connect.sid=')) {
-        console.error(`Missing or invalid authentication cookie in request: ${req.method} ${req.url}`);
-        return res.status(403).json({ error: 'Authentication required' });
-      }
-        */
       next();
     });
 
-    app.use(express.json()); // For parsing application json
+    app.use(express.json()); // For parsing application/json
 
     app.use('/admin/api/webauthn', webauthnRoutes); // Use the WebAuthn routes
 
-    app.use(admin.options.rootPath, router);
+    // Custom login route to handle login using CustomAuthProvider
+    app.post('/admin/login', async (req, res) => {
+      try {
+        const loginResult = await provider.handleLogin({
+          data: req.body,
+          headers: undefined
+        });
 
-    /*
-    // Start the HTTPS server
-    https.createServer(sslOptions, app).listen(port, () => {
-      console.log(`AdminJS available at https://localhost:${port}${admin.options.rootPath}`);
+        if (loginResult) {
+          // If login is successful, send JSON response
+          return res.status(200).json({
+            success: true,
+            message: 'Login successful',
+            user: loginResult,
+          });
+        } else {
+          // If login fails, send a JSON error response
+          return res.status(401).json({
+            success: false,
+            message: 'Invalid login credentials',
+          });
+        }
+      } catch (error) {
+        console.error('Error during login:', error);
+        return res.status(500).json({
+          success: false,
+          message: 'Internal server error',
+        });
+      }
     });
-    */
+
+    // Use AdminJS router
+    app.use(admin.options.rootPath, router);
 
     // Start the HTTP server
     http.createServer(app).listen(port, () => {
