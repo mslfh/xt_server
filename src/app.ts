@@ -10,12 +10,14 @@ import webauthnRoutes from './routes/webauthn-routes.js';
 import session from 'express-session';
 import sequelize from './db/config.js';
 import SequelizeStore from 'connect-session-sequelize';
-import http from 'http';
+import https from 'https';
+import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
 dotenv.config();
 
+// Extend express-session types to add user data to session
 declare module 'express-session' {
   interface SessionData {
     user: any; 
@@ -36,6 +38,12 @@ sessionStore.sync();
 // Get the directory name in ES module scope
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// Load SSL/TLS certificates
+const sslOptions = {
+  key: fs.readFileSync(path.resolve(__dirname, '../localhost-key.pem')),
+  cert: fs.readFileSync(path.resolve(__dirname, '../localhost.pem')),
+};
 
 const start = async () => {
   const app = express();
@@ -68,13 +76,12 @@ const start = async () => {
         resave: false,
         saveUninitialized: false,
         cookie: {
-          secure: false,  // Set this to `true` if you're using HTTPS in production
+          secure: true,  // Set this to `true` when using HTTPS
           httpOnly: true,  // Prevent client-side JS from accessing the cookie
           maxAge: 1000 * 60 * 60 * 24,  // Set cookie expiration to 1 day
         },
       }
     );
-    
 
     // Configure session middleware
     app.use(
@@ -84,13 +91,12 @@ const start = async () => {
         resave: false,
         saveUninitialized: false,
         cookie: {
-          secure: process.env.NODE_ENV === 'production', 
+          secure: true,  // HTTPS is required to set secure cookies
           httpOnly: true,  
           maxAge: 1000 * 60 * 60 * 24, 
         },
       })
     );
-    
 
     // Adding a middleware to log all requests
     app.use((req, res, next) => {
@@ -138,20 +144,17 @@ const start = async () => {
         });
       }
     });
-    
 
     // Use AdminJS router
     app.use(admin.options.rootPath, router);
 
-    // Start the HTTP server
-    http.createServer(app).listen(port, () => {
-      console.log(`AdminJS available at http://localhost:${port}${admin.options.rootPath}`);
+    // Start the HTTPS server
+    https.createServer(sslOptions, app).listen(port, () => {
+      console.log(`AdminJS available at https://localhost:${port}${admin.options.rootPath}`);
     });
 
   } catch (error) {
     console.error('Failed to start the application.', error);
-    // You can't use 'res' here because this is not an Express route
-    // Instead, log the error to the console or handle it appropriately
   }
 };
 
