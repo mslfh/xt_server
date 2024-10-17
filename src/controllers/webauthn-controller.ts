@@ -227,7 +227,26 @@ export const verifyAuthentication = async (req: Request, res: Response) => {
 
             req.session.challenge = null; // Clear the challenge from the session
 
-            return res.status(200).json({ status: 'ok', message: 'Verification with passkey successful!' });
+            // Store user information in the session
+            req.session.user = {
+                id: user.ID,
+                username: user.Username,
+            };
+            // Save the session and return a response with userID and username
+            req.session.save((err) => {
+                if (err) {
+                    console.error('Error saving session:', err);
+                    return res.status(500).json({ error: 'Failed to save session.' });
+                }
+
+                // Session is saved, return success response
+                return res.status(200).json({
+                    message: 'Verification with passkey successful!',
+                    userID: user.ID,       // Returning userID
+                    username: user.Username, // Returning username
+                });
+            });
+
         } else {
             return res.status(400).json({ status: 'failed' });
         }
@@ -257,8 +276,26 @@ export const checkEmailAndPassword = async (req: Request, res: Response) => {
             return res.status(401).json({ error: 'Invalid email or password.' });
         }
 
-        // Return success response if email and password match
-        return res.status(200).json({ status: 'ok', message: 'Email and password are correct.' });
+        // Store user information in the session
+        req.session.user = {
+            id: user.ID,
+            username: user.Username,
+        };
+
+        // Save the session and return a response with userID and username
+        req.session.save((err) => {
+            if (err) {
+                console.error('Error saving session:', err);
+                return res.status(500).json({ error: 'Failed to save session.' });
+            }
+
+            // Session is saved, return success response
+            return res.status(200).json({
+                message: 'Email and password are correct.',
+                userID: user.ID,       // Returning userID
+                username: user.Username, // Returning username
+            });
+        });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ error: 'Internal server error' });
