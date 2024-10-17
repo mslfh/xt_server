@@ -20,7 +20,7 @@ dotenv.config();
 // Extend express-session types to add user data to session
 declare module 'express-session' {
   interface SessionData {
-    user: any; 
+    user: any;
   }
 }
 
@@ -92,8 +92,8 @@ const start = async () => {
         saveUninitialized: false,
         cookie: {
           secure: true,  // HTTPS is required to set secure cookies
-          httpOnly: true,  
-          maxAge: 1000 * 60 * 60 * 24, 
+          httpOnly: true,
+          maxAge: 1000 * 60 * 60 * 24,
         },
       })
     );
@@ -117,6 +117,7 @@ const start = async () => {
 
     app.use('/admin/api/webauthn', webauthnRoutes); // Use the WebAuthn routes
 
+    /*
     app.post('/admin/login', async (req, res) => {
       try {
         const loginResult = await provider.handleLogin({ data: req.body, headers: req.headers });
@@ -144,6 +145,7 @@ const start = async () => {
         });
       }
     });
+    */
 
     // Use AdminJS router
     app.use(admin.options.rootPath, router);
