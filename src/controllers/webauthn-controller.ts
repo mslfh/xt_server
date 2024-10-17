@@ -294,6 +294,7 @@ export const checkEmailAndPassword = async (req: Request, res: Response) => {
                 message: 'Email and password are correct.',
                 userID: user.ID,       // Returning userID
                 username: user.Username, // Returning username
+                departmentID: user.DepartmentID,
             });
         });
     } catch (error) {
