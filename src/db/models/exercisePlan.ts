@@ -14,7 +14,7 @@ ExercisePlan.init({
   },
   Subject: {
     type: DataTypes.STRING(255),
-    allowNull: false,
+    allowNull: false,  // 确认 Subject 是否应该允许为空
   },
   ContentType: {
     type: DataTypes.STRING(255),
@@ -49,7 +49,7 @@ ExercisePlan.init({
     allowNull: true,
   },
   IsAllDay: {
-    type: DataTypes.TINYINT,
+    type: DataTypes.BOOLEAN,
     allowNull: true,
   },
   Intervals: {
