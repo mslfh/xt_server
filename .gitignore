@@ -28,10 +28,6 @@ build/
 dist/
 *.zip
 
-# Local environment variables #
-######################
-.env
-
 # vs #
 ######################
 .vs
