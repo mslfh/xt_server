@@ -15,6 +15,12 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
+-- Check if the 'adminjs' database exists; create it if it doesn't
+CREATE DATABASE IF NOT EXISTS adminjs;
+
+-- Use the 'adminjs' database
+USE adminjs;
+
 --
 -- Table structure for table `Organisation`
 --

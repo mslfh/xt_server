@@ -1,10 +1,11 @@
 #!/bin/sh
 
-until nc -z -v -w30 mysql 3306
-do
-  echo "Waiting for MySQL..."
+echo "Running wait-for-mysql.sh"
+
+until mysqladmin ping -h "mysql" --silent; do
+  echo "Waiting for MySQL to be ready..."
   sleep 5
 done
 
-echo "MySQL is up and running!"
+echo "MySQL is ready!"
 npm start

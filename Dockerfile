@@ -5,8 +5,8 @@ WORKDIR /admin
 # Set timezone
 ENV TZ="UTC"
 
-# Install netcat-openbsd
-RUN apt-get update && apt-get install -y netcat-openbsd
+# Install netcat-openbsd and MySQL client
+RUN apt-get update && apt-get install -y netcat-openbsd default-mysql-client
 
 # Copy package.json and package-lock.json
 COPY package.json package-lock.json ./
