@@ -50,7 +50,7 @@ const start = async () => {
 
   // Allow cross-source requests
   app.use(cors({
-    origin: ['https://www.exertime.me', 'https://localhost:8443', 'https://localhost:9000'],
+    origin: ['https://www.exertime.me', 'https://localhost:8443', process.env.FRONTEND_ORIGIN],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
