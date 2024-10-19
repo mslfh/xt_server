@@ -5,7 +5,7 @@ import Department from './department.js';
 
 // Define the attributes for the User model
 interface UserAttributes {
-  ID: string;
+  ID: string;  // ID as UUID string
   GivenNames?: string;
   Surname?: string;
   Username: string;
@@ -27,11 +27,11 @@ interface UserAttributes {
 }
 
 // Define the type for creating new User instances
-interface UserCreationAttributes extends Optional<UserAttributes, 'ID'> { }
+interface UserCreationAttributes extends Optional<UserAttributes, 'ID'> {}
 
 // Define the User model class
 class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
-  public ID!: string;
+  public ID!: string;  // UUID
   public GivenNames?: string;
   public Surname?: string;
   public Username!: string;
@@ -60,8 +60,10 @@ class User extends Model<UserAttributes, UserCreationAttributes> implements User
 // Initialize the User model
 User.init({
   ID: {
-    type: DataTypes.CHAR(36),
-    primaryKey: true,
+    type: DataTypes.UUID,  // Change ID to UUID
+    defaultValue: DataTypes.UUIDV4,  // Automatically generate UUIDs
+    primaryKey: true,  // Set as primary key
+    allowNull: false,  // ID cannot be null
   },
   GivenNames: {
     type: DataTypes.STRING(50),
