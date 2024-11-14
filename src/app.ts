@@ -7,6 +7,7 @@ import options from './admin/options.js';
 import initializeDb from './db/index.js';
 import * as dotenv from 'dotenv';
 import webauthnRoutes from './routes/webauthn-routes.js';
+import departmentRoutes from './routes/department.js';
 import session from 'express-session';
 import sequelize from './db/config.js';
 import SequelizeStore from 'connect-session-sequelize';
@@ -116,6 +117,7 @@ const start = async () => {
     app.use(express.json()); // For parsing application/json
 
     app.use('/admin/api/webauthn', webauthnRoutes); // Use the WebAuthn routes
+    app.use('/admin/api/department', departmentRoutes);
 
     /*
     app.post('/admin/login', async (req, res) => {
