@@ -4,7 +4,7 @@ import Department from './department.js';
 import ExerciseDelay from './exerciseDelay.js';
 import User from './user.js';
 
-class Exercise extends Model {}
+class Exercise extends Model { }
 
 Exercise.init(
   {
@@ -70,7 +70,7 @@ Exercise.init(
     },
     UserID: {
       type: DataTypes.INTEGER.UNSIGNED,
-      allowNull: true,
+      allowNull: false,
       references: {
         model: User,
         key: 'ID',
