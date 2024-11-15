@@ -1,30 +1,6 @@
 import { Request, Response } from 'express';
 import Department from '../db/models/department.js';
 
-function validateDepartmentRequest(request: any) {
-    const { OrganisationID, ShortName, LongName } = request;
-    if (!OrganisationID) {
-        return {
-            status: 'failed',
-            message: 'OrganisationID is required',
-        };
-    }
-    if (!ShortName) {
-        return {
-            status: 'failed',
-            message: 'ShortName is required',
-        };
-    }
-    if (!LongName) {
-        return {
-            status: 'failed',
-            message: 'LongName is required',
-        };
-    }
-
-    return null;
-}
-
 export const createDepartment = async (req: Request, res: Response) => {
     const {
         OrganisationID,
