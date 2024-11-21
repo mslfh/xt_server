@@ -25,7 +25,7 @@ declare module 'express-session' {
   }
 }
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5001;
 
 // Define the session store using connect-session-sequelize
 const SequelizeSessionStore = SequelizeStore(session.Store);
