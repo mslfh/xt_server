@@ -3,15 +3,19 @@ import { Model, DataTypes } from 'sequelize';
 
 import sequelize from '../config.js';
 
-class FileModel extends Model {
+class VideoUploadModel extends Model {
     public id!: number;
+
     public s3Key?: string;
+
     public bucket?: string;
+
     public mime?: string;
+
     public comment?: string;
 }
 
-FileModel.init(
+VideoUploadModel.init(
   {
     id: {
       type: DataTypes.INTEGER.UNSIGNED,
@@ -43,4 +47,4 @@ FileModel.init(
   },
 );
 
-export default FileModel;
+export default VideoUploadModel;

@@ -1,3 +1,5 @@
+import { ActionContext, ActionRequest } from 'adminjs';
+
 import UserEvents from '../db/models/userEvents.js';
 
 const CreateUserEventsResource = {
@@ -6,10 +8,15 @@ const CreateUserEventsResource = {
         properties: {
             ID: {
                 isVisible: {
-                    list: true, filter: true, show: true, edit: false,
+                    list: true,
+                    filter: true,
+                    show: true,
+                    edit: false,
                 },
             },
-            UserID: { reference: 'user', isVisible: true },
+            UserID: {
+                isVisible: true,
+            },
             // ExerciseCategoryID: { reference: 'exercise_category', isVisible: true },
             // ExerciseID: { reference: 'exercise', isVisible: true },
         },
@@ -18,7 +25,17 @@ const CreateUserEventsResource = {
                 hideActionHeader: true,
                 isVisible: true,
                 showFilter: false,
-                component: 'UserEvent',
+                component: 'UserEvents',
+                before: async (request: ActionRequest, context: ActionContext) => {
+                    const userEvents = await UserEvents.findAll();
+                    const formattedEvents = userEvents.map((item) => ({
+                        id: item.ID,
+                        title: item.EventType.toString(),
+                        start: item.Date,
+                        end: item.Date,
+                    }));
+                    context.extraProps = { events: formattedEvents };
+                },
             },
         },
     },

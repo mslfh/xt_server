@@ -1,13 +1,13 @@
 import uploadFeature from '@adminjs/upload';
 
-import File from '../db/models/file.js';
+import VideoUpload from '../db/models/videoUpload.js';
 import componentLoader from '../admin/component-loader.js';
 import CustomLocalProvider from '../admin/custom-local-provider.js';
 
 const localProvider = new CustomLocalProvider('public/files', { baseUrl: '/files' });
 
 const CreateVideoUploadResource = {
-  resource: File,
+  resource: VideoUpload,
   options: {
     properties: {
       id: {

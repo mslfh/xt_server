@@ -13,6 +13,8 @@ import ExportUserActivities from '../dist/components/User/ExportUserActivities/i
 AdminJS.UserComponents.ExportUserActivities = ExportUserActivities
 import UserDetail from '../dist/components/User/UserDetail/index'
 AdminJS.UserComponents.UserDetail = UserDetail
+import UserEvents from '../dist/components/UserEvent/index'
+AdminJS.UserComponents.UserEvents = UserEvents
 import ImportComponent from '../node_modules/@adminjs/import-export/lib/components/ImportComponent'
 AdminJS.UserComponents.ImportComponent = ImportComponent
 import ExportComponent from '../node_modules/@adminjs/import-export/lib/components/ExportComponent'

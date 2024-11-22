@@ -1,20 +1,22 @@
-import express from 'express';
-import AdminJS from 'adminjs';
-import cors from 'cors';
-import { buildAuthenticatedRouter } from '@adminjs/express';
-import CustomAuthProvider from './admin/auth-provider.js';
-import options from './admin/options.js';
-import initializeDb from './db/index.js';
-import * as dotenv from 'dotenv';
-import webauthnRoutes from './routes/webauthn-routes.js';
-import departmentRoutes from './routes/department.js';
-import session from 'express-session';
-import sequelize from './db/config.js';
-import SequelizeStore from 'connect-session-sequelize';
 import https from 'https';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+
+import express from 'express';
+import AdminJS from 'adminjs';
+import cors from 'cors';
+import { buildAuthenticatedRouter } from '@adminjs/express';
+import * as dotenv from 'dotenv';
+import session from 'express-session';
+import SequelizeStore from 'connect-session-sequelize';
+
+import CustomAuthProvider from './admin/auth-provider.js';
+import options from './admin/options.js';
+import initializeDb from './db/index.js';
+import webauthnRoutes from './routes/webauthn-routes.js';
+import departmentRoutes from './routes/department.js';
+import sequelize from './db/config.js';
 
 dotenv.config();
 
@@ -77,11 +79,11 @@ const start = async () => {
         resave: false,
         saveUninitialized: false,
         cookie: {
-          secure: true,  // Set this to `true` when using HTTPS
-          httpOnly: true,  // Prevent client-side JS from accessing the cookie
-          maxAge: 1000 * 60 * 60 * 24,  // Set cookie expiration to 1 day
+          secure: true, // Set this to `true` when using HTTPS
+          httpOnly: true, // Prevent client-side JS from accessing the cookie
+          maxAge: 1000 * 60 * 60 * 24, // Set cookie expiration to 1 day
         },
-      }
+      },
     );
 
     // Configure session middleware
@@ -92,11 +94,11 @@ const start = async () => {
         resave: false,
         saveUninitialized: false,
         cookie: {
-          secure: true,  // HTTPS is required to set secure cookies
+          secure: true, // HTTPS is required to set secure cookies
           httpOnly: true,
           maxAge: 1000 * 60 * 60 * 24,
         },
-      })
+      }),
     );
 
     // Adding a middleware to log all requests
@@ -123,7 +125,7 @@ const start = async () => {
     app.post('/admin/login', async (req, res) => {
       try {
         const loginResult = await provider.handleLogin({ data: req.body, headers: req.headers });
-    
+
         if (loginResult) {
           // If login is successful, set a session and cookie
           req.session.user = loginResult;
@@ -156,7 +158,6 @@ const start = async () => {
     https.createServer(sslOptions, app).listen(port, () => {
       console.log(`AdminJS available at https://localhost:${port}${admin.options.rootPath}`);
     });
-
   } catch (error) {
     console.error('Failed to start the application.', error);
   }

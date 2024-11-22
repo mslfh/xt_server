@@ -9,6 +9,7 @@ import CreateReportsResource from '../resources/ReportsResource.js';
 import CreateQuestionsResource from '../resources/QuestionsResource.js';
 import CreateRegistrationResource from '../resources/RegistrationResource.js';
 import CreateSurveyResponsesResource from '../resources/SurveyResponsesResource.js';
+import CreateUserEventsResource from '../resources/UserEventsResource.js';
 import CreateHelpfulHintsResource from '../resources/HelpfulHintsResource.js';
 
 import componentLoader from './component-loader.js';
@@ -32,6 +33,7 @@ const options: AdminJSOptions = {
     CreateQuestionsResource,
     CreateRegistrationResource,
     CreateSurveyResponsesResource,
+    CreateUserEventsResource,
     CreateHelpfulHintsResource,
   ],
   databases: [],

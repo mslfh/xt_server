@@ -2,7 +2,15 @@ import { DataTypes, Model } from 'sequelize';
 
 import sequelize from '../config.js';
 
-class UserEvents extends Model {}
+class UserEvents extends Model {
+  public ID!: number;
+
+  public UserID!: string;
+
+  public Date!: Date;
+
+  public EventType!: number;
+}
 
 UserEvents.init({
   ID: {
@@ -19,7 +27,7 @@ UserEvents.init({
       key: 'ID',
     },
     onDelete: 'CASCADE',
-      onUpdate: 'CASCADE',
+    onUpdate: 'CASCADE',
   },
   Date: {
     type: DataTypes.DATE,
