@@ -1,4 +1,5 @@
 import { DataTypes, Model, Optional } from 'sequelize';
+
 import sequelize from '../config.js';
 
 interface OrganisationAttributes {
@@ -7,9 +8,10 @@ interface OrganisationAttributes {
     LongName: string;
     CountdownDuration?: number;
     WalkingExDelay?: number;
+    Status?: boolean;
 }
 
-interface OrganisationCreationAttributes extends Optional<OrganisationAttributes, 'ID'> {}
+interface OrganisationCreationAttributes extends Optional<OrganisationAttributes, 'ID'> { }
 
 class Organisation extends Model<OrganisationAttributes, OrganisationCreationAttributes>
     implements OrganisationAttributes {
@@ -18,6 +20,7 @@ class Organisation extends Model<OrganisationAttributes, OrganisationCreationAtt
     public LongName!: string;
     public CountdownDuration?: number;
     public WalkingExDelay?: number;
+    public Status?: boolean;
 }
 
 Organisation.init(
@@ -43,13 +46,17 @@ Organisation.init(
             type: DataTypes.INTEGER,
             allowNull: true,
         },
+        Status: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: true,
+        },
     },
     {
         sequelize,
-        tableName: 'Organisation',
+        tableName: 'organisation',
         modelName: 'Organisation',
         timestamps: false,
-    }
+    },
 );
 
 export default Organisation;

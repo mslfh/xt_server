@@ -36,7 +36,7 @@ ExerciseEvent.init({
     allowNull: true,
   },
   IsRepeat: {
-    type: DataTypes.BOOLEAN, 
+    type: DataTypes.BOOLEAN,
     allowNull: true,
   },
   RepeatCount: {
