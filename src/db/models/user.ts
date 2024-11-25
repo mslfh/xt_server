@@ -1,11 +1,13 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import bcrypt from 'bcryptjs';
+
 import sequelize from '../config.js';
+
 import Department from './department.js';
 
 // Define the attributes for the User model
 interface UserAttributes {
-  ID: string;  // ID as UUID string
+  ID: string; // ID as UUID string
   GivenNames?: string;
   Surname?: string;
   Username: string;
@@ -27,28 +29,46 @@ interface UserAttributes {
 }
 
 // Define the type for creating new User instances
-interface UserCreationAttributes extends Optional<UserAttributes, 'ID'> {}
+type UserCreationAttributes = Optional<UserAttributes, 'ID'>
 
 // Define the User model class
 class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
-  public ID!: string;  // UUID
+  public ID!: string; // UUID
+
   public GivenNames?: string;
+
   public Surname?: string;
+
   public Username!: string;
+
   public DepartmentID?: number;
+
   public PreferredName?: string;
+
   public Domain?: string;
+
   public JobTitle?: string;
+
   public Email!: string;
+
   public Password!: string;
+
   public Passkey?: string;
+
   public DOB?: Date;
+
   public Gender?: 'M' | 'F' | 'O' | 'X';
+
   public Height?: number;
+
   public Status?: string;
+
   public AdminFlag?: number;
+
   public ExitEnabled?: boolean;
+
   public IsNew?: boolean;
+
   public CalorieGoal?: number;
 
   // Method to compare the given plain password with the hashed password
@@ -60,10 +80,10 @@ class User extends Model<UserAttributes, UserCreationAttributes> implements User
 // Initialize the User model
 User.init({
   ID: {
-    type: DataTypes.UUID,  // Change ID to UUID
-    defaultValue: DataTypes.UUIDV4,  // Automatically generate UUIDs
-    primaryKey: true,  // Set as primary key
-    allowNull: false,  // ID cannot be null
+    type: DataTypes.CHAR(36), // Change ID to UUID
+    defaultValue: DataTypes.UUIDV4, // Automatically generate UUIDs
+    primaryKey: true, // Set as primary key
+    allowNull: false, // ID cannot be null
   },
   GivenNames: {
     type: DataTypes.STRING(50),
@@ -155,6 +175,7 @@ User.init({
 }, {
   sequelize,
   tableName: 'user',
+  modelName: 'User',
   timestamps: false,
 
   // Hooks for password hashing
