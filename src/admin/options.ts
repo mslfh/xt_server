@@ -1,5 +1,5 @@
 import { AdminJSOptions } from 'adminjs';
-import componentLoader from './component-loader.js';
+import componentLoader from './component_loader.js';
 import Organisation from '../db/models/organisation.js';
 import Department from '../db/models/department.js';
 import Exercise from '../db/models/exercise.js';
