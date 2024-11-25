@@ -37,7 +37,7 @@ UserMicrosoftAccount.init({
     type: DataTypes.CHAR(36),
     allowNull: false,
     references: {
-      model: 'user',  // Reference to the 'user' table
+      model: 'User',  // Reference to the 'user' table
       key: 'ID',      // Foreign key is the 'ID' field in 'user' table
     },
     onDelete: 'CASCADE',   // If user is deleted, associated microsoftAccount should also be deleted
