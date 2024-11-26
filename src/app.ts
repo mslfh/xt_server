@@ -1,16 +1,3 @@
-import express from 'express';
-import AdminJS from 'adminjs';
-import cors from 'cors';
-import { buildAuthenticatedRouter } from '@adminjs/express';
-import CustomAuthProvider from './admin/auth_provider.js';
-import options from './admin/options.js';
-import initializeDb from './db/index.js';
-import * as dotenv from 'dotenv';
-import webauthnRoutes from './routes/webauthn_routes.js';
-import exerciseRoutes from './routes/exercise_routes.js';
-import session from 'express-session';
-import sequelize from './db/config.js';
-import SequelizeStore from 'connect-session-sequelize';
 import https from 'https';
 import fs from 'fs';
 import path from 'path';
@@ -24,11 +11,12 @@ import * as dotenv from 'dotenv';
 import session from 'express-session';
 import SequelizeStore from 'connect-session-sequelize';
 
-import CustomAuthProvider from './admin/auth-provider.js';
+import CustomAuthProvider from './admin/auth_provider.js';
 import options from './admin/options.js';
 import initializeDb from './db/index.js';
-import webauthnRoutes from './routes/webauthn-routes.js';
+import webauthnRoutes from './routes/webauthn_routes.js';
 import departmentRoutes from './routes/department.js';
+import exerciseRoutes from './routes/exercise_routes.js';
 import sequelize from './db/config.js';
 
 dotenv.config();
