@@ -1,7 +1,7 @@
 import uploadFeature from '@adminjs/upload';
 
 import VideoUpload from '../db/models/videoUpload.js';
-import componentLoader from '../admin/component-loader.js';
+import componentLoader from '../admin/component_loader.js';
 import CustomLocalProvider from '../admin/custom-local-provider.js';
 
 const localProvider = new CustomLocalProvider('public/files', { baseUrl: '/files' });

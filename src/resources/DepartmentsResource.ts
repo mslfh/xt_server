@@ -3,7 +3,7 @@ import { ActionRequest, ActionContext } from 'adminjs';
 
 import Department from '../db/models/department.js';
 import User from '../db/models/user.js';
-import componentLoader from '../admin/component-loader.js';
+import componentLoader from '../admin/component_loader.js';
 
 const CreateDepartmentsResource = {
     resource: Department,

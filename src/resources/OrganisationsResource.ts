@@ -4,7 +4,7 @@ import { ActionRequest, ActionContext } from 'adminjs';
 import Organisation from '../db/models/organisation.js';
 import User from '../db/models/user.js';
 import Department from '../db/models/department.js';
-import componentLoader from '../admin/component-loader.js';
+import componentLoader from '../admin/component_loader.js';
 
 const getCurrentUser = async (context: ActionContext) => {
     const { currentAdmin } = context; // contains two keys: email and role
