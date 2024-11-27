@@ -56,7 +56,6 @@ services:
       - app-network
     volumes:
       - ./wait-for-mysql.sh:/wait-for-mysql.sh
-    entrypoint: [ "sh", "/wait-for-mysql.sh" ]
 
   mysql:
     image: mysql:latest
@@ -68,8 +67,9 @@ services:
       - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql
-      - ./adminjs.sql:/docker-entrypoint-initdb.d/adminjs.sql
-      - ./mysql-init.sh:/docker-entrypoint-initdb.d/mysql-init.sh
+      - ./data/adminjs.sql:/docker-entrypoint-initdb.d/adminjs.sql
+#      - ./data/adminjs_new.sql:/docker-entrypoint-initdb.d/adminjs_new.sql
+      - ./data/scripts/mysql-init.sh:/docker-entrypoint-initdb.d/mysql-init.sh
       - ./mysql-general-log.log:/tmp/mysql-general-log.log
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
