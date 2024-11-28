@@ -20,7 +20,7 @@ ExerciseLog.init({
     type: DataTypes.CHAR(36),
     allowNull: false,
     references: {
-      model: 'User',
+      model: 'user',
       key: 'ID',
     },
     onDelete: 'CASCADE',
@@ -72,7 +72,5 @@ ExerciseLog.belongsTo(Exercise, {
   onDelete: 'CASCADE',
   onUpdate: 'CASCADE',
 });
-
-
 
 export default ExerciseLog;

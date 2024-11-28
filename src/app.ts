@@ -14,9 +14,9 @@ import SequelizeStore from 'connect-session-sequelize';
 import CustomAuthProvider from './admin/auth_provider.js';
 import options from './admin/options.js';
 import initializeDb from './db/index.js';
-import webauthnRoutes from './routes/webauthn_routes.js';
+import webauthnRoutes from './routes/webauthn.js';
 import departmentRoutes from './routes/department.js';
-import exerciseRoutes from './routes/exercise_routes.js';
+import exerciseRoutes from './routes/exerciseLog.js';
 import sequelize from './db/config.js';
 
 dotenv.config();
@@ -54,7 +54,7 @@ const start = async () => {
 
   // Allow cross-source requests
   app.use(cors({
-    origin: ['https://www.exertime.me', 'https://localhost:8443', process.env.FRONTEND_ORIGIN],
+    origin: [process.env.FRONTEND_ORIGIN],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
@@ -90,7 +90,7 @@ const start = async () => {
     // Configure session middleware
     app.use(
       session({
-        secret: process.env.SESSION_SECRET || 'your_secret_key',
+        secret: process.env.SESSION_SECRET || 'session_secret_key',
         store: sessionStore,
         resave: false,
         saveUninitialized: false,
@@ -119,41 +119,12 @@ const start = async () => {
 
     app.use(express.json()); // For parsing application/json
 
-    app.use('/admin/api/webauthn', webauthnRoutes); // Use the WebAuthn routes
+    // Add web routes in routes folder
+    app.use('/admin/api/webauthn', webauthnRoutes); 
 
-    app.use('/admin/api/exercise-logs', exerciseRoutes);
+    app.use('/admin/api/exercise/log', exerciseRoutes);
 
     app.use('/admin/api/department', departmentRoutes);
-
-    /*
-    app.post('/admin/login', async (req, res) => {
-      try {
-        const loginResult = await provider.handleLogin({ data: req.body, headers: req.headers });
-
-        if (loginResult) {
-          // If login is successful, set a session and cookie
-          req.session.user = loginResult;
-          return res.status(200).json({
-            success: true,
-            message: 'Login successful',
-            user: loginResult,
-          });
-        } else {
-          // If login fails, send a JSON error response
-          return res.status(401).json({
-            success: false,
-            message: 'Invalid login credentials',
-          });
-        }
-      } catch (error) {
-        console.error('Error during login:', error);
-        return res.status(500).json({
-          success: false,
-          message: 'Internal server error',
-        });
-      }
-    });
-    */
 
     // Use AdminJS router
     app.use(admin.options.rootPath, router);

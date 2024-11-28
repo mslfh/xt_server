@@ -1,7 +1,6 @@
 import { DataTypes, Model } from 'sequelize';
 
 import sequelize from '../config.js';
-
 import Department from './department.js';
 import User from './user.js';
 
@@ -56,16 +55,6 @@ Exercise.init(
       allowNull: true,
       references: {
         model: Department,
-        key: 'ID',
-      },
-      onDelete: 'CASCADE',
-      onUpdate: 'CASCADE',
-    },
-    UserID: {
-      type: DataTypes.CHAR(36),
-      allowNull: false,
-      references: {
-        model: User,
         key: 'ID',
       },
       onDelete: 'CASCADE',

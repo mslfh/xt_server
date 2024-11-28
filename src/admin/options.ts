@@ -11,6 +11,7 @@ import CreateRegistrationResource from '../resources/RegistrationResource.js';
 import CreateSurveyResponsesResource from '../resources/SurveyResponsesResource.js';
 import CreateUserEventsResource from '../resources/UserEventsResource.js';
 import CreateHelpfulHintsResource from '../resources/HelpfulHintsResource.js';
+import CreateExercisesLogResource from '../resources/ExercisesLogResource.js';
 
 import componentLoader from './component_loader.js';
 
@@ -29,6 +30,7 @@ const options: AdminJSOptions = {
     CreateDepartmentsResource,
     CreateUsersResource,
     CreateExercisesResource,
+    CreateExercisesLogResource,
     CreateReportsResource,
     CreateQuestionsResource,
     CreateRegistrationResource,
