@@ -1,9 +1,10 @@
 import { DataTypes, Model } from 'sequelize';
+
 import sequelize from '../config.js';
 import Department from './department.js';
-import ExerciseDelay from './exerciseDelay.js';
+import User from './user.js';
 
-class Exercise extends Model {}
+class Exercise extends Model { }
 
 Exercise.init(
   {
@@ -49,14 +50,6 @@ Exercise.init(
       type: DataTypes.ENUM('C', 'M', 'O'),
       allowNull: true,
     },
-    ExerciseDelayID: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      allowNull: true,
-      references: {
-        model: ExerciseDelay,
-        key: 'ID',
-      },
-    },
     DepartmentID: {
       type: DataTypes.INTEGER.UNSIGNED,
       allowNull: true,
@@ -73,9 +66,7 @@ Exercise.init(
     tableName: 'exercise',
     modelName: 'Exercise',
     timestamps: false,
-  }
+  },
 );
-
-
 
 export default Exercise;

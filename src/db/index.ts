@@ -1,8 +1,6 @@
 import { Database, Resource } from '@adminjs/sequelize';
 import AdminJS from 'adminjs';
 import sequelize from './config.js';
-import Organisation from './models/organisation.js';
-import Department from './models/department.js';  
 
 AdminJS.registerAdapter({
   Database,

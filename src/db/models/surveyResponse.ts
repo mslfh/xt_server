@@ -1,7 +1,8 @@
 import { DataTypes, Model } from 'sequelize';
+
 import sequelize from '../config.js';
 
-class SurveyResponse extends Model {}
+class SurveyResponse extends Model { }
 
 SurveyResponse.init({
   ID: {
@@ -14,7 +15,7 @@ SurveyResponse.init({
     type: DataTypes.CHAR(36),
     allowNull: false,
     references: {
-      model: 'User',
+      model: 'user',
       key: 'ID',
     },
     onDelete: 'CASCADE',

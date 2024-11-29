@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { registrationOptions, verifyRegistration, authenticationOptions, verifyAuthentication, checkEmailAndPassword, newRegistration } from '../controllers/webauthn-controller.js';
+import { registrationOptions, verifyRegistration, authenticationOptions, verifyAuthentication, checkEmailAndPassword, newRegistration } from '../controllers/webauthnController.js';
 
 const router = Router();
 
