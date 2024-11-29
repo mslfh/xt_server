@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createDepartment, getAllDepartments, updateDepartment, deleteDepartment } from '../controllers/DepartmentController.js';
+import { createDepartment, getAllDepartments, updateDepartment, deleteDepartment } from '../controllers/departmentController.js';
 
 const router = Router();
 
