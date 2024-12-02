@@ -16,7 +16,7 @@
     ```sh
     npm run start
     ```
-5. Ensure MySQL is running and properly configured. The sql file is in ./src/db.
+5. Ensure MySQL is running and properly configured. The sql files are in the `data` folder.
 
 ## API Development
 
@@ -41,4 +41,5 @@ We use Sequelize to build adapters.
 
 2. To test video upload functionality, please create a directory /public/files
 
-
+3. The `data` folder contains SQL files for database initialization.
+4. The `docs` folder contains documentation files.
