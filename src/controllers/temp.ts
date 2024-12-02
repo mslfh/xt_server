@@ -181,5 +181,6 @@ export const deleteDepartment = async (req: Request, res: Response) => {
             message: 'Error deleting department',
             error: error.message,
         });
+        
     }
 };
