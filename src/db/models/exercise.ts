@@ -1,18 +1,21 @@
 import { DataTypes, Model } from 'sequelize';
 
 import sequelize from '../config.js';
+
 import Department from './department.js';
-import User from './user.js';
 
 class Exercise extends Model { }
 
 Exercise.init(
   {
     ID: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      autoIncrement: true,
+      type: DataTypes.UUID,
       primaryKey: true,
       allowNull: false,
+    },
+    Type: {
+      type: DataTypes.STRING(50),
+      allowNull: true,
     },
     Caption: {
       type: DataTypes.STRING(50),
@@ -21,14 +24,6 @@ Exercise.init(
     Status: {
       type: DataTypes.ENUM('A', 'I', 'D'),
       allowNull: false,
-    },
-    Type: {
-      type: DataTypes.STRING(50),
-      allowNull: true,
-    },
-    CategoryID: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      allowNull: true,
     },
     Image: {
       type: DataTypes.TEXT,
@@ -39,7 +34,7 @@ Exercise.init(
       allowNull: true,
     },
     Duration: {
-      type: DataTypes.DATE,
+      type: DataTypes.INTEGER.UNSIGNED,
       allowNull: true,
     },
     Kilojoules: {
@@ -50,15 +45,21 @@ Exercise.init(
       type: DataTypes.ENUM('C', 'M', 'O'),
       allowNull: true,
     },
-    DepartmentID: {
-      type: DataTypes.INTEGER.UNSIGNED,
+    S3key: {
+      type: DataTypes.STRING,
       allowNull: true,
-      references: {
-        model: Department,
-        key: 'ID',
-      },
-      onDelete: 'CASCADE',
-      onUpdate: 'CASCADE',
+    },
+    Bucket: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    Mime: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    Comment: {
+      type: DataTypes.TEXT,
+      allowNull: true,
     },
   },
   {

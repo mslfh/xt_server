@@ -1,50 +1,49 @@
-// src/db/models/file.ts
 import { Model, DataTypes } from 'sequelize';
 
 import sequelize from '../config.js';
 
-class VideoUploadModel extends Model {
-    public id!: number;
+class VideoUpload extends Model {
+  public ID!: number;
 
-    public s3Key?: string;
+  public S3key?: string;
 
-    public bucket?: string;
+  public Bucket?: string;
 
-    public mime?: string;
+  public Mime?: string;
 
-    public comment?: string;
+  public Comment?: string;
 }
 
-VideoUploadModel.init(
+VideoUpload.init(
   {
-    id: {
+    ID: {
       type: DataTypes.INTEGER.UNSIGNED,
       autoIncrement: true,
       primaryKey: true,
       allowNull: false,
     },
-    s3Key: {
+    S3key: {
       type: DataTypes.STRING,
       allowNull: true,
     },
-    bucket: {
+    Bucket: {
       type: DataTypes.STRING,
       allowNull: true,
     },
-    mime: {
+    Mime: {
       type: DataTypes.STRING,
       allowNull: true,
     },
-    comment: {
+    Comment: {
       type: DataTypes.TEXT,
       allowNull: true,
     },
   },
   {
     sequelize,
-    modelName: 'FileModel',
-    tableName: 'files',
+    modelName: 'VideoUpload',
+    tableName: 'video_upload',
   },
 );
 
-export default VideoUploadModel;
+export default VideoUpload;
