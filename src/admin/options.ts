@@ -25,7 +25,7 @@ const options: AdminJSOptions = {
   },
   rootPath: '/admin',
   resources: [
-    CreateVideoUploadResource,
+    // CreateVideoUploadResource,
     CreateOrganisationsResource,
     CreateDepartmentsResource,
     CreateUsersResource,

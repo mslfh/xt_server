@@ -84,21 +84,20 @@ INSERT INTO `department` VALUES (4, 1, 0, 'Dept4', 'Department Four', 4, 25, 35,
 -- ----------------------------
 DROP TABLE IF EXISTS `exercise`;
 CREATE TABLE `exercise`  (
-  `ID` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `ID` CHAR(36) NOT NULL,
+  `Type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   `Caption` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `Status` enum('A','I','D') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `Type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT 'repetition / duration',
-  `CategoryID` int NULL DEFAULT NULL,
   `Image` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
   `VideoURL` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
-  `Duration` datetime NULL DEFAULT NULL,
+  `Duration` INTEGER NULL DEFAULT NULL,
   `Kilojoules` float NULL DEFAULT NULL,
-  `CalculationType` enum('C','M','O') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
-  `ExerciseDelayID` int UNSIGNED NULL DEFAULT NULL,
-  `DepartmentID` int UNSIGNED NULL DEFAULT NULL,
+  `CalculationType` enum('R','M') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `S3key` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `Bucket` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `Mime` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `Comment` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   PRIMARY KEY (`ID`) USING BTREE,
-  INDEX `DepartmentID`(`DepartmentID` ASC) USING BTREE,
-  CONSTRAINT `exercise_ibfk_1` FOREIGN KEY (`DepartmentID`) REFERENCES `department` (`ID`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
@@ -106,7 +105,32 @@ CREATE TABLE `exercise`  (
 -- ----------------------------
 INSERT INTO `exercise` VALUES (1, 'Caption1', 'A', 'Type1', 1, 'https://th.bing.com/th/id/OIP.8XLECwYGdt3DBa45yi83RAHaE8?rs=1&pid=ImgDetMain', 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4', '2024-08-07 05:19:28', 100, 'C', 1, 1);
 INSERT INTO `exercise` VALUES (2, 'Caption2', 'A', 'Type2', 2, 'https://th.bing.com/th/id/OIP.8XLECwYGdt3DBa45yi83RAHaE8?rs=1&pid=ImgDetMain', 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', '2024-08-07 05:19:28', 200, 'M', 2, 1);
-
+INSERT INTO exercise  (ID, Type, Caption, Status, Image, VideoURL, Duration, Kilojoules, CalculationType, S3key, Bucket, Mime, Comment) 
+VALUES
+('C4029D0F-5F6E-4D99-8447-00398CFFB86E', 'Easy', 'Biceps Curl', 'A', NULL, 'XT_Biceps Curls', 30, 0.00991443, 'M', NULL, NULL, NULL, NULL),
+('C7D16CB7-99B9-4138-AE25-0772D3118E56', 'Easy', 'Double Knee Lifts', 'A', NULL, 'XT_Chair_a_Knee Lifts_26s', 0, 0.008116883, 'R', NULL, NULL, NULL, NULL),
+('3C7D65AC-DF7F-47BE-90AB-080C9CA4DD50', 'Moderate', 'Push Throughs', 'A', NULL, 'XT_Chair_a_Push Throughs_27s', 0, 0.008447828, 'R', NULL, NULL, NULL, NULL),
+('E5353D2F-DBEF-4C4A-B935-0A4FE6FE1FC6', 'Moderate', 'Chair Squats', 'A', NULL, 'XT_Chair_a_Squats_37s', 31, 0.01053642, 'R', NULL, NULL, NULL, NULL),
+('ABF8D819-9572-4486-8B35-158CB6262255', 'Easy', 'Arm Pumps with Foot Tap', 'A', NULL, 'XT_Chair_ArmPumpswithFoot Tap22', 22, 0.00738961, 'M', NULL, NULL, NULL, NULL),
+('1BBA273C-79F6-4D83-8C8B-19A5040419A8', 'Easy', 'Chair Push Ups', 'A', NULL, 'XT_Chair_ChairPushups37', 25, 0.009155844, 'R', NULL, NULL, NULL, NULL),
+('756FDD13-1F45-4B0A-A585-2400D64811F8', 'Easy', 'Front Raise to Triceps Press', 'A', NULL, 'XT_Chair_FrontRaisetoTricepsPress35', 30, 0.006493506, 'R', NULL, NULL, NULL, NULL),
+('0D72E8FE-F042-4189-AF25-2A98C8C69EC8', 'Easy', 'Hip Flexions', 'A', NULL, 'XT_Chair_HipFlexions37', 37, 0.00421645, 'M', NULL, NULL, NULL, NULL),
+('DCEC09A3-3B7F-490A-BC55-2DB28A98703B', 'Easy', 'Hip Flexions with Knee Extensions', 'A', NULL, 'XT_Chair_HipFlexionswithKneeExtensions35', 33, 0.005329004, 'M', NULL, NULL, NULL, NULL),
+('C2BDFDD9-D7B5-4670-9A89-2E414539062A', 'Easy', 'Single Leg Lifts', 'A', NULL, 'XT_Chair_LegLifts23', 35, 0.0024329, 'R', NULL, NULL, NULL, NULL),
+('46AD1ECA-7D71-41D7-8678-32470555DE3F', 'Easy', 'Seated Crunch', 'A', NULL, 'XT_Chair_Seated Crunch_30s', 38, 0.00108, 'R', NULL, NULL, NULL, NULL),
+('14B6F9C2-E6B0-4059-ABA8-34A5CC1C9444', 'Easy', 'Seated Knee Hugs', 'A', NULL, 'XT_Chair_SeatedKneeHugs38', 39, 0.007324675, 'R', NULL, NULL, NULL, NULL),
+('67839D23-86E0-4F90-B6BB-36DEF1BAA839', 'Easy', 'Seated March', 'A', NULL, 'XT_Chair_SeatedMarch23', 0, 0.00725974, 'M', NULL, NULL, NULL, NULL),
+('E3D1330A-1BC1-4A25-8EDF-3C386F623BAE', 'Moderate', 'Take a Roll', 'A', NULL, 'XT_Facility_a_Chair Walk_89s', 33, 0.008658009, 'M', NULL, NULL, NULL, NULL),
+('2B71DD33-E0FB-40D6-BE82-3E7BECBDC2AB', 'Moderate', 'Stair Climb', 'A', NULL, 'XT_Facility_a_Stair Climb_50s', 46, 0.011055029, 'R', NULL, NULL, NULL, NULL),
+('970E98C9-2F47-4255-9E35-3EFE890A124F', 'Moderate', 'Step Ups', 'A', NULL, 'XT_Facility_a_Step Ups_35s', 48, 0.0110367, 'R', NULL, NULL, NULL, NULL),
+('B4DFEE5F-3CDA-4CA4-8066-3F96AD73DDC7', 'Easy', 'Toe Raises', 'A', NULL, 'XT_Facility_a_Toe Raises_52s', 0, 0.009964935, 'R', NULL, NULL, NULL, NULL),
+('EDA1B00D-9E0A-4574-A6B3-43ED2A91E42B', 'Easy', 'Take a Hike', 'A', NULL, 'XT_Facility_a_Walk_73s', 37, 0.003008333, 'M', NULL, NULL, NULL, NULL),
+('A5A17737-1C72-4C30-8D93-46E1A1079E41', 'Moderate', 'Wall Touches', 'A', NULL, 'XT_Facility_a_Wall Touches_32s', 0, 0.011814116, 'R', NULL, NULL, NULL, NULL),
+('DF7AE4B9-7296-4D9F-8C8A-4E3507A8AD67', 'Moderate', 'Bear_Crawl', 'A', NULL, 'XT_Facility_Bear Crawl_30s', 50, 0.010322511, 'M', NULL, NULL, NULL, NULL),
+('1F520C2A-44F1-41D4-AC5B-4F9B872C3928', 'Challenging', 'Crab Walk', 'A', NULL, 'XT_Facility_Crab Crawl_33s', 3, 0.010415152, 'M', NULL, NULL, NULL, NULL),
+('1D8BBD88-CA94-4BC4-B847-5BED9A3C01DC', 'Challenging', 'Crocodile Walk', 'A', NULL, 'XT_Facility_Crocodile Crawl_37s', 30, 0.011463203, 'M', NULL, NULL, NULL, NULL),
+('A31F864F-F7B8-473F-BF89-6394D8089C48', 'Challenging', 'Hop Scotch', 'A', NULL, 'XT_Facility_Hop Scotch', 37, 0.012927644, 'R', NULL, NULL, NULL, NULL),
+('5CD43220-DE26-4B2B-AEB4-6498AC4A201F', 'Challenging', 'Walking Lunge', 'A', NULL, 'XT_Facility_Walking Lunge_39s', 46, 0.01164329, 'R', NULL, NULL, NULL, NULL);
 -- ----------------------------
 -- Table structure for exercise_category
 -- ----------------------------

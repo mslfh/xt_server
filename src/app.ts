@@ -4,7 +4,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 import express from 'express';
-import AdminJS from 'adminjs';
+import AdminJS, { ActionContext } from 'adminjs';
 import cors from 'cors';
 import { buildAuthenticatedRouter } from '@adminjs/express';
 import * as dotenv from 'dotenv';
@@ -18,6 +18,7 @@ import webauthnRoutes from './routes/webauthn.js';
 import departmentRoutes from './routes/department.js';
 import exerciseRoutes from './routes/exerciseLog.js';
 import sequelize from './db/config.js';
+import User from './db/models/user.js';
 
 dotenv.config();
 
@@ -25,6 +26,10 @@ dotenv.config();
 declare module 'express-session' {
   interface SessionData {
     user: any;
+    adminUser?: {
+      email: string;
+      role: string;
+    };
   }
 }
 
@@ -120,14 +125,28 @@ const start = async () => {
     app.use(express.json()); // For parsing application/json
 
     // Add web routes in routes folder
-    app.use('/admin/api/webauthn', webauthnRoutes); 
+    app.use('/admin/api/webauthn', webauthnRoutes);
 
     app.use('/admin/api/exercise/log', exerciseRoutes);
 
     app.use('/admin/api/department', departmentRoutes);
 
+    app.use('/files', async (req, res, next) => {
+      console.log(`Session: ${JSON.stringify(req.session)}`);
+      if (!req.session.adminUser) {
+        return res.status(401).json({ error: 'Access denied: You do not have permission to view this resource.' });
+      }
+      const { role } = req.session.adminUser;
+      console.log(`Role: ${role}`);
+      if (!role || role !== 'admin') {
+        return res.status(401).json({ error: 'Access denied: You do not have permission to view this resource.' });
+      }
+      next();
+    });
+
     // Use AdminJS router
     app.use(admin.options.rootPath, router);
+    app.use('/files', express.static('public/files'));
 
     // Start the HTTPS server
     https.createServer(sslOptions, app).listen(port, () => {

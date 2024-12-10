@@ -1,15 +1,18 @@
 import { BaseAuthProvider, LoginHandlerOptions } from 'adminjs';
 import bcrypt from 'bcryptjs';
-import { DEFAULT_ADMIN } from './constants.js';
+
 import User from '../db/models/user.js';
-import UserMicrosoftAccount from '../db/models/microsoftAccount.js';  // Import the new model
+import UserMicrosoftAccount from '../db/models/microsoftAccount.js'; // Import the new model
+
+import { DEFAULT_ADMIN } from './constants.js';
 
 class CustomAuthProvider extends BaseAuthProvider {
-
   // Handle login logic
   async handleLogin(opts: LoginHandlerOptions) {
     const { data } = opts;
-    const { email, password, microsoftEmail, oid, sub } = data;  // Added microsoftEmail, oid, sub
+    const {
+      email, password, microsoftEmail, oid, sub,
+    } = data; // Added microsoftEmail, oid, sub
     const { email: adminEmail, password: adminPassword } = DEFAULT_ADMIN;
 
     console.log(`Attempting login for email: ${email}`);
@@ -22,10 +25,9 @@ class CustomAuthProvider extends BaseAuthProvider {
       if (isPasswordCorrect) {
         console.log('Admin password correct');
         return { email: adminEmail, role: 'admin' };
-      } else {
-        console.log('Admin password incorrect');
-        return null;
       }
+      console.log('Admin password incorrect');
+      return null;
     }
 
     // Microsoft Account Login Logic
@@ -35,17 +37,17 @@ class CustomAuthProvider extends BaseAuthProvider {
         // Query the new microsoftAccount table
         const microsoftAccount = await UserMicrosoftAccount.findOne({
           where: { microsoftEmail, oid, sub },
-          include: [{ model: User }] // Include associated user info
+          include: [{ model: User }], // Include associated user info
         });
 
         if (!microsoftAccount || !microsoftAccount.isLinked) {
           console.log('No linked Microsoft account found');
-          return null;  // Return null if no matching Microsoft account
+          return null; // Return null if no matching Microsoft account
         }
 
         const user = microsoftAccount.User;
         console.log(`Microsoft User found: ${user.Email}, login successful`);
-        return { email: user.Email, role: 'user' };  // Microsoft login successful
+        return { email: user.Email, role: 'user' }; // Microsoft login successful
       } catch (error) {
         console.error('Error during Microsoft login:', error);
         return null;
@@ -70,8 +72,7 @@ class CustomAuthProvider extends BaseAuthProvider {
 
       const role = user.AdminFlag ? 'admin' : 'user';
       console.log(`User password correct, login successful as ${role}`);
-      return { email: user.Email, role };  // Regular login successful
-
+      return { email: user.Email, role }; // Regular login successful
     } catch (error) {
       console.error('Error during login:', error);
       return null;

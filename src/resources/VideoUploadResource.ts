@@ -55,6 +55,7 @@ const CreateVideoUploadResource = {
         bucket: 'bucket',
         mimeType: 'mime',
         file: 'file',
+        // Add any other necessary properties here
       },
     }),
   ],

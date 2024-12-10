@@ -1,9 +1,13 @@
-import { ActionRequest, ActionContext } from 'adminjs';
+import importExportFeature from '@adminjs/import-export';
+import uploadFeature, { LocalUploadOptions, UploadOptions } from '@adminjs/upload';
+import { ActionRequest, ActionContext, setCurrentAdmin } from 'adminjs';
 
 import User from '../db/models/user.js';
 import Exercise from '../db/models/exercise.js';
+import componentLoader from '../admin/component_loader.js';
+import CustomLocalProvider from '../admin/custom-local-provider.js';
 
-const getAdminAccessibility = async (context: ActionContext) => {
+const adminOnly = async (context: ActionContext) => {
     const user = await User.findOne({
         where: {
             Email: context.currentAdmin.email,
@@ -18,8 +22,32 @@ const getAdminAccessibility = async (context: ActionContext) => {
     return false;
 };
 
+const localProvider = new CustomLocalProvider(
+    'public/files',
+    { baseUrl: '/files' },
+);
+
+const uploadConfig: UploadOptions = {
+    componentLoader,
+    provider: { local: localProvider },
+    validation: {
+        mimeTypes: ['video/mp4', 'video/avi', 'video/mkv'],
+        maxSize: 500 * 1024 * 1024, // Set the max file size to 500MB
+    },
+    properties: {
+        key: 'S3key',
+        bucket: 'Bucket',
+        mimeType: 'Mime',
+        file: 'VideoUpload',
+    },
+};
+
 const CreateExercisesResource = {
     resource: Exercise,
+    features: [
+        importExportFeature({ componentLoader }),
+        uploadFeature(uploadConfig),
+    ],
     options: {
         properties: {
             ID: {
@@ -48,7 +76,7 @@ const CreateExercisesResource = {
             },
             VideoURL: {
                 isVisible: {
-                    list: true, filter: true, show: true, edit: true,
+                    list: true, filter: true, show: false, edit: true,
                 },
                 position: 5,
             },
@@ -58,50 +86,71 @@ const CreateExercisesResource = {
                 },
                 position: 6,
             },
-            Kilojoules: {
+            Status: {
                 isVisible: {
                     list: true, filter: true, show: true, edit: true,
                 },
                 position: 7,
             },
-            CalculationType: {
+            Kilojoules: {
                 isVisible: {
                     list: true, filter: true, show: true, edit: true,
                 },
                 position: 8,
             },
-            ExerciseDelayID: {
+            CalculationType: {
                 isVisible: {
                     list: true, filter: true, show: true, edit: true,
                 },
                 position: 9,
             },
-            Status: {
+            S3key: {
                 isVisible: {
-                    list: true, filter: true, show: true, edit: true,
+                    list: false, filter: false, show: false, edit: false,
                 },
                 position: 10,
+            },
+            Bucket: {
+                isVisible: {
+                    list: false, filter: false, show: false, edit: false,
+                },
+                position: 11,
+            },
+            Mime: {
+                isVisible: {
+                    list: false, filter: false, show: false, edit: false,
+                },
+                position: 12,
+            },
+            VideoUpload: {
+                isVisible: {
+                    list: false, filter: false, show: true, edit: true,
+                },
+                position: 13,
             },
         },
         actions: {
             new: {
-                before: async (request) => {
+                before: async (request: ActionRequest) => {
                     if (request.payload) {
                         delete request.payload.ID;
                     }
                     return request;
                 },
-                isAccessible: getAdminAccessibility,
+                isAccessible: adminOnly,
+            },
+            show: {
+                isAccessible: adminOnly,
             },
             edit: {
-                isAccessible: getAdminAccessibility,
+                isAccessible: adminOnly,
             },
             delete: {
-                isAccessible: getAdminAccessibility,
+                isAccessible: adminOnly,
             },
             bulkDelete: {
                 actionType: 'bulk',
-                isAccessible: getAdminAccessibility,
+                isAccessible: adminOnly,
             },
             ActivateAll: {
                 actionType: 'bulk',
@@ -121,7 +170,7 @@ const CreateExercisesResource = {
                         ),
                     };
                 },
-                isAccessible: ({ currentAdmin }) => currentAdmin.AdminFlag === 0,
+                isAccessible: adminOnly,
             },
             InactivateAll: {
                 actionType: 'bulk',
@@ -141,7 +190,7 @@ const CreateExercisesResource = {
                         ),
                     };
                 },
-                isAccessible: ({ currentAdmin }) => currentAdmin.AdminFlag === 0,
+                isAccessible: adminOnly,
             },
             Activate: {
                 actionType: 'record',
@@ -168,7 +217,7 @@ const CreateExercisesResource = {
                         };
                     }
                 },
-                isAccessible: ({ currentAdmin }) => currentAdmin.AdminFlag === 0,
+                isAccessible: adminOnly,
             },
             Inactivate: {
                 actionType: 'record',
@@ -195,7 +244,7 @@ const CreateExercisesResource = {
                         };
                     }
                 },
-                isAccessible: ({ currentAdmin }) => currentAdmin.AdminFlag === 0,
+                isAccessible: adminOnly,
             },
             Export: {
                 actionType: 'resource',
@@ -220,7 +269,7 @@ const CreateExercisesResource = {
                     record: context.record.toJSON(),
                 })
                 ,
-                isAccessible: ({ currentAdmin }) => currentAdmin.AdminFlag === 0,
+                isAccessible: adminOnly,
             },
         },
     },
