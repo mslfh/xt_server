@@ -3,7 +3,7 @@ import sequelize from '../config.js';
 import User from './user.js';
 import Exercise from './exercise.js';
 
-class ExerciseLog extends Model {}
+class ExerciseLog extends Model { }
 
 ExerciseLog.init({
   ID: {
@@ -13,7 +13,7 @@ ExerciseLog.init({
     allowNull: false,
   },
   ExerciseID: {
-    type: DataTypes.INTEGER.UNSIGNED,
+    type: DataTypes.UUID,
     allowNull: false,
   },
   UserID: {
@@ -24,7 +24,7 @@ ExerciseLog.init({
       key: 'ID',
     },
     onDelete: 'CASCADE',
-      onUpdate: 'CASCADE',
+    onUpdate: 'CASCADE',
   },
   Repetitions: {
     type: DataTypes.INTEGER,

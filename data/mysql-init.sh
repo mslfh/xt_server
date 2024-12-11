@@ -16,5 +16,5 @@ if ! mysql -u root -p"$MYSQL_ROOT_PASSWORD" -e 'USE adminjs'; then
 
   # Execute the adminjs.sql script to initialize the database
   echo 'Running adminjs.sql';
-  mysql -u root -p"$MYSQL_ROOT_PASSWORD" adminjs < /docker-entrypoint-initdb.d/data/adminjs.sql;
+  mysql -u root -p"$MYSQL_ROOT_PASSWORD" adminjs < /docker-entrypoint-initdb.d/adminjs.sql;
 fi

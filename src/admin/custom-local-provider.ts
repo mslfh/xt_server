@@ -3,6 +3,7 @@ import fs from 'fs/promises';
 
 class CustomLocalProvider {
     bucket: string;
+
     opts: { baseUrl: string };
 
     constructor(bucket: string, opts: { baseUrl: string }) {
@@ -24,7 +25,10 @@ class CustomLocalProvider {
     }
 
     path(key) {
-        return `${this.opts.baseUrl}/${encodeURIComponent(key)}`;
+        return {
+            url: `${this.opts.baseUrl}/${encodeURIComponent(key)}`,
+            filepath: path.join(this.bucket, key),
+        };
     }
 }
 

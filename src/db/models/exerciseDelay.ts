@@ -22,7 +22,7 @@ const ExerciseDelay = sequelize.define('ExerciseDelay', {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: 'Exercise', 
+      model: 'Exercise',
       key: 'ID',
     },
   },
