@@ -47,7 +47,7 @@ Organisation.init(
             allowNull: true,
         },
         Status: {
-            type: DataTypes.BOOLEAN,
+            type: DataTypes.TINYINT,
             defaultValue: true,
         },
     },
